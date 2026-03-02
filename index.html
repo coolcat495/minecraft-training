@@ -19,7 +19,8 @@
             overflow: hidden;
         }
 
-        .container {
+        /* MENU STYLES */
+        #menuContainer {
             width: 100%;
             height: 100vh;
             display: flex;
@@ -196,7 +197,6 @@
             color: #aaa;
         }
 
-        /* CONTENT PAGES */
         .section-title {
             font-size: 32px;
             color: #4caf50;
@@ -219,65 +219,6 @@
             font-size: 18px;
         }
 
-        /* PVP TRAINER */
-        .clickspeed-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-        }
-
-        .click-area {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #4caf50 0%, #2d5016 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 60px;
-            transition: all 0.1s;
-            user-select: none;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
-        }
-
-        .click-area:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);
-        }
-
-        .stats-display {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .stat-box {
-            background: rgba(76, 175, 80, 0.1);
-            border: 2px solid #4caf50;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .stat-box h4 {
-            color: #4caf50;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .stat-box .value {
-            font-size: 28px;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        /* BUILD TRAINER */
         .build-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -319,41 +260,6 @@
         .difficulty.medium { background: #fbc02d; }
         .difficulty.hard { background: #f44336; }
 
-        /* LEADERBOARD */
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .leaderboard-table th {
-            background: #4caf50;
-            color: #000;
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .leaderboard-table td {
-            border-bottom: 1px solid #2d5016;
-            padding: 12px;
-            background: rgba(76, 175, 80, 0.05);
-        }
-
-        .leaderboard-table tr:hover {
-            background: rgba(76, 175, 80, 0.1);
-        }
-
-        .rank {
-            font-weight: bold;
-            color: #4caf50;
-        }
-
-        .rank.gold { color: #ffd700; font-size: 18px; }
-        .rank.silver { color: #c0c0c0; font-size: 18px; }
-        .rank.bronze { color: #cd7f32; font-size: 18px; }
-
-        /* BUTTONS */
         .btn {
             padding: 12px 24px;
             background: #4caf50;
@@ -382,99 +288,118 @@
             color: #000;
         }
 
-        /* ACHIEVEMENTS */
-        .achievements-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+        /* GAME STYLES */
+        #gameContainer {
+            display: none;
+            width: 100%;
+            height: 100vh;
         }
 
-        .achievement {
-            background: rgba(76, 175, 80, 0.1);
-            border: 2px solid #2d5016;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s;
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
-        .achievement.unlocked {
-            border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.2);
-        }
-
-        .achievement-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .achievement h4 {
-            color: #4caf50;
+        #hud {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
             font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .achievement p {
-            font-size: 11px;
-            color: #aaa;
-        }
-
-        /* INVENTORY */
-        .inventory {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .inventory-item {
-            background: rgba(76, 175, 80, 0.1);
-            border: 2px solid #4caf50;
+            background: rgba(0, 0, 0, 0.5);
             padding: 15px;
             border-radius: 5px;
-            text-align: center;
-            position: relative;
+            z-index: 10;
         }
 
-        .inventory-item .icon {
-            font-size: 30px;
-            margin-bottom: 5px;
-        }
-
-        .inventory-item .amount {
-            background: #4caf50;
-            color: #000;
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #inventory {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .inventory-slot {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid white;
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-weight: bold;
-            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .inventory-slot.selected {
+            border-color: #ffff00;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+        }
+
+        #blockInfo {
             position: absolute;
-            right: 5px;
-            bottom: 5px;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 10;
         }
 
-        ul, ol {
-            margin-left: 20px;
-            margin-top: 10px;
-            line-height: 2;
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 200px;
+            z-index: 10;
         }
 
-        /* RESPONSIEF */
+        #exitButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 100;
+        }
+
+        #exitButton:hover {
+            background: #d32f2f;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 200px;
-            }
-
-            .category-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-display {
-                grid-template-columns: 1fr;
             }
 
             .header h1 {
@@ -485,34 +410,11 @@
                 font-size: 24px;
             }
         }
-
-        @media (max-width: 600px) {
-            .content {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 2px solid #2d5016;
-                display: flex;
-                overflow-x: auto;
-            }
-
-            .menu-section {
-                min-width: 200px;
-            }
-
-            .main-area {
-                flex: 1;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER -->
+    <!-- MENU -->
+    <div id="menuContainer">
         <div class="header">
             <h1>⛏️ Minecraft Training</h1>
             <div class="user-stats">
@@ -522,15 +424,10 @@
                 <div class="stat">
                     <span>XP: <strong id="userXP">0</strong></span>
                 </div>
-                <div class="stat">
-                    <span>Achievements: <strong id="userAchievements">0/20</strong></span>
-                </div>
             </div>
         </div>
 
-        <!-- CONTENT -->
         <div class="content">
-            <!-- SIDEBAR -->
             <div class="sidebar">
                 <div class="menu-section">
                     <div class="menu-title">🏠 Menu</div>
@@ -541,49 +438,26 @@
                     <div class="menu-title">⚔️ PVP Training</div>
                     <button class="menu-btn" onclick="switchPage(event, 'clickspeed')">Clickspeed Test</button>
                     <button class="menu-btn" onclick="switchPage(event, 'combos')">Combos Training</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'shield')">Shield Tactics</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">🏗️ Build Training</div>
                     <button class="menu-btn" onclick="switchPage(event, 'buildchallenges')">Build Challenges</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'buildmode')">Creative Mode</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'buildtips')">Build Tips</button>
                 </div>
 
                 <div class="menu-section">
-                    <div class="menu-title">🎮 Versies</div>
-                    <button class="menu-btn" onclick="switchPage(event, 'bedrock')">Bedrock Edition</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'java')">Java Edition</button>
-                </div>
-
-                <div class="menu-section">
-                    <div class="menu-title">⛏️ Mining</div>
-                    <button class="menu-btn" onclick="switchPage(event, 'miningtrainer')">Mining Trainer</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'resourcemanager')">Resource Manager</button>
-                </div>
-
-                <div class="menu-section">
-                    <div class="menu-title">🌍 Survival</div>
-                    <button class="menu-btn" onclick="switchPage(event, 'survivalmode')">Survival Mode</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'recipes')">Recipes</button>
-                </div>
-
-                <div class="menu-section">
-                    <div class="menu-title">🏆 Statistieken</div>
-                    <button class="menu-btn" onclick="switchPage(event, 'leaderboard')">Leaderboard</button>
-                    <button class="menu-btn" onclick="switchPage(event, 'achievements')">Achievements</button>
+                    <div class="menu-title">🎮 Game</div>
+                    <button class="menu-btn" onclick="startGame()">🌍 Join World</button>
                 </div>
             </div>
 
-            <!-- MAIN AREA -->
             <div class="main-area">
                 <!-- HOME PAGE -->
                 <div id="home" class="page active">
                     <div class="home-content">
                         <div class="logo">⛏️</div>
                         <h2>Minecraft Training</h2>
-                        <p>De ultieme trainingsplatform voor Minecraft spelers! Verbeter je PVP skills, bouwvaardigheden en meer!</p>
+                        <p>De ultieme trainingsplatform voor Minecraft spelers!</p>
                         
                         <div class="category-grid">
                             <div class="category-card" onclick="switchPage(event, 'clickspeed')">
@@ -596,25 +470,10 @@
                                 <h3>Build Training</h3>
                                 <p>Leer sneller en mooier bouwen</p>
                             </div>
-                            <div class="category-card" onclick="switchPage(event, 'miningtrainer')">
-                                <h3>⛏️</h3>
-                                <h3>Mining Trainer</h3>
-                                <p>Optimaliseer je mijnbouw</p>
-                            </div>
-                            <div class="category-card" onclick="switchPage(event, 'survivalmode')">
+                            <div class="category-card" onclick="startGame()">
                                 <h3>🌍</h3>
-                                <h3>Survival Mode</h3>
-                                <p>Overleef en beheer resources</p>
-                            </div>
-                            <div class="category-card" onclick="switchPage(event, 'leaderboard')">
-                                <h3>🏆</h3>
-                                <h3>Leaderboard</h3>
-                                <p>Zie je scores en rankings</p>
-                            </div>
-                            <div class="category-card" onclick="switchPage(event, 'achievements')">
-                                <h3>⭐</h3>
-                                <h3>Achievements</h3>
-                                <p>Behaald speciale doelen</p>
+                                <h3>Join World</h3>
+                                <p>Speel in de Minecraft wereld!</p>
                             </div>
                         </div>
                     </div>
@@ -626,94 +485,26 @@
                     
                     <div class="subsection">
                         <h3>Klik zo snel mogelijk!</h3>
-                        <div class="clickspeed-container">
-                            <div class="click-area" id="clickArea" onclick="handleClick()">
-                                <span id="clickText">KLIK HIER!</span>
+                        <div style="text-align: center;">
+                            <div style="width: 200px; height: 200px; background: linear-gradient(135deg, #4caf50 0%, #2d5016 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 60px; margin: 20px auto;" id="clickArea" onclick="handleClick()">
+                                KLIK!
                             </div>
-                            <div class="stats-display">
-                                <div class="stat-box">
-                                    <h4>CLICKS</h4>
-                                    <div class="value" id="clickCount">0</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 500px; margin: 20px auto;">
+                                <div style="background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; padding: 15px; border-radius: 5px; text-align: center;">
+                                    <h4 style="color: #4caf50;">CLICKS</h4>
+                                    <div style="font-size: 28px; color: #fff; font-weight: bold;" id="clickCount">0</div>
                                 </div>
-                                <div class="stat-box">
-                                    <h4>TIJD (sec)</h4>
-                                    <div class="value" id="clickTime">10</div>
+                                <div style="background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; padding: 15px; border-radius: 5px; text-align: center;">
+                                    <h4 style="color: #4caf50;">TIJD</h4>
+                                    <div style="font-size: 28px; color: #fff; font-weight: bold;" id="clickTime">10</div>
                                 </div>
-                                <div class="stat-box">
-                                    <h4>CPS</h4>
-                                    <div class="value" id="cps">0</div>
+                                <div style="background: rgba(76, 175, 80, 0.1); border: 2px solid #4caf50; padding: 15px; border-radius: 5px; text-align: center;">
+                                    <h4 style="color: #4caf50;">CPS</h4>
+                                    <div style="font-size: 28px; color: #fff; font-weight: bold;" id="cps">0</div>
                                 </div>
                             </div>
-                        </div>
-                        <div style="text-align: center; margin-top: 20px;">
-                            <button class="btn" onclick="startClickTest()">Start Test (10 sec)</button>
+                            <button class="btn" onclick="startClickTest()">Start Test</button>
                             <button class="btn secondary" onclick="resetClickTest()">Reset</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- COMBOS TRAINING -->
-                <div id="combos" class="page">
-                    <h2 class="section-title">⚔️ Combos Training</h2>
-                    
-                    <div class="subsection">
-                        <h3>Basis Combos</h3>
-                        <p style="margin-bottom: 15px;">Leer de essentiële PVP combos:</p>
-                        <div class="build-grid">
-                            <div class="build-challenge">
-                                <h4>Punch Combo</h4>
-                                <div class="difficulty easy">Beginner</div>
-                                <p>Linker + Rechts + Sprint naar vriend</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Practice</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Knockback Chain</h4>
-                                <div class="difficulty medium">Intermediate</div>
-                                <p>Meerdere hits voor max knockback</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Practice</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>W-Tap Combo</h4>
-                                <div class="difficulty hard">Advanced</div>
-                                <p>Sprint-tap voor beste knockback</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Practice</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>S-Tap Technique</h4>
-                                <div class="difficulty hard">Advanced</div>
-                                <p>Backpedal-tap voor positioning</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Practice</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SHIELD TACTICS -->
-                <div id="shield" class="page">
-                    <h2 class="section-title">🛡️ Shield Tactics</h2>
-                    
-                    <div class="subsection">
-                        <h3>Shield Defense Strategies</h3>
-                        <p style="margin-bottom: 15px;">Master het gebruik van shields in combat:</p>
-                        <div class="build-grid">
-                            <div class="build-challenge">
-                                <h4>Shield Placement</h4>
-                                <div class="difficulty easy">Beginner</div>
-                                <p>Correct shield positionering leren</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Axe vs Shield</h4>
-                                <div class="difficulty medium">Intermediate</div>
-                                <p>Axe gebruiken tegen shields</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Shield Dodge</h4>
-                                <div class="difficulty hard">Advanced</div>
-                                <p>Dodgen terwijl shield omhoog</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -723,430 +514,77 @@
                     <h2 class="section-title">🏗️ Build Challenges</h2>
                     
                     <div class="subsection">
-                        <h3>Timed Building Challenges</h3>
-                        <p style="margin-bottom: 15px;">Bouw structuren in een bepaalde tijd:</p>
-                        <div class="build-grid">
-                            <div class="build-challenge">
-                                <h4>Starter House</h4>
-                                <div class="difficulty easy">1 minuut</div>
-                                <p>Bouw een basis huisje</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Start</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Wooden Tower</h4>
-                                <div class="difficulty medium">2 minuten</div>
-                                <p>Bouw een houten toren</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Start</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Stone Castle</h4>
-                                <div class="difficulty hard">5 minuten</div>
-                                <p>Bouw een steenkasteel</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Start</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Floating Island</h4>
-                                <div class="difficulty hard">3 minuten</div>
-                                <p>Bouw een zwevend eiland</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Start</button>
-                            </div>
-                        </div>
+                        <h3>Bouw in de wereld!</h3>
+                        <p style="margin-bottom: 15px;">Klik op "Join World" om in de game te bouwen en te trainen!</p>
+                        <button class="btn" onclick="startGame()">🌍 Join World Nu</button>
                     </div>
                 </div>
 
-                <!-- BUILD MODE -->
-                <div id="buildmode" class="page">
-                    <h2 class="section-title">🏗️ Creative Build Mode</h2>
+                <!-- COMBOS -->
+                <div id="combos" class="page">
+                    <h2 class="section-title">⚔️ Combos Training</h2>
                     
                     <div class="subsection">
-                        <h3>Onbeperkt Bouwen</h3>
-                        <p style="margin-bottom: 15px;">Bouw wat je wilt, waar je wilt!</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                            <button class="btn">🌳 Oak Wood</button>
-                            <button class="btn">🪨 Stone</button>
-                            <button class="btn">🟫 Dirt</button>
-                            <button class="btn">🟩 Grass</button>
-                            <button class="btn">🟦 Water</button>
-                            <button class="btn">🟨 Sand</button>
-                            <button class="btn">🟥 Redstone</button>
-                            <button class="btn">⭐ Glass</button>
-                        </div>
-                        <p style="color: #aaa; margin-top: 15px; font-size: 12px;">Creative mode block selector - Kies je blokken en begin met bouwen!</p>
-                    </div>
-                </div>
-
-                <!-- BUILD TIPS -->
-                <div id="buildtips" class="page">
-                    <h2 class="section-title">💡 Build Tips & Tricks</h2>
-                    
-                    <div class="subsection">
-                        <h3>Symmetrie & Proporties</h3>
-                        <p>Zorg dat je structuren symmetrisch zijn. Dit ziet er veel beter uit!</p>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Gebruik Details</h3>
-                        <p>Voeg kleine details toe (ramen, deuren, balken) voor meer diepte.</p>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Kleur Combinaties</h3>
-                        <p>Mix verschillende bloksoorten voor interessante kleuren en texturen.</p>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Landschaping</h3>
-                        <p>Maak het terrein rond je bouw interessant met water, bomen en hoogteverschillen.</p>
-                    </div>
-                </div>
-
-                <!-- BEDROCK EDITION -->
-                <div id="bedrock" class="page">
-                    <h2 class="section-title">🎮 Bedrock Edition</h2>
-                    
-                    <div class="subsection">
-                        <h3>Bedrock vs Java - Verschillen</h3>
-                        <p><strong>Bedrock Edition:</strong></p>
-                        <ul>
-                            <li>✅ Cross-platform (Switch, Mobile, Xbox)</li>
-                            <li>✅ Sneller en optimaler</li>
-                            <li>✅ Beter voor multiplayer</li>
-                            <li>❌ Geen free downloads</li>
-                            <li>❌ Minder mods beschikbaar</li>
-                        </ul>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Bedrock PVP Specifics</h3>
-                        <p><strong>Verschillen in combat:</strong></p>
-                        <ul>
-                            <li>⚔️ Geen attack cooldown (altijd snel)</li>
-                            <li>⚔️ Andere knockback waarden</li>
-                            <li>⚔️ Shield mechanics verschillen</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- JAVA EDITION -->
-                <div id="java" class="page">
-                    <h2 class="section-title">☕ Java Edition</h2>
-                    
-                    <div class="subsection">
-                        <h3>Java vs Bedrock - Voordelen</h3>
-                        <p><strong>Java Edition:</strong></p>
-                        <ul>
-                            <li>✅ Gratis als je het al had</li>
-                            <li>✅ Enorme modding community</li>
-                            <li>✅ Server mods mogelijk</li>
-                            <li>✅ Technische redstone mods</li>
-                            <li>❌ Alleen voor PC/Mac/Linux</li>
-                        </ul>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Java PVP Specifics</h3>
-                        <p><strong>Combat mechanics:</strong></p>
-                        <ul>
-                            <li>⚔️ Attack cooldown systeem (CPS materie)</li>
-                            <li>⚔️ Streng timing nodig</li>
-                            <li>⚔️ Sprint-click is essentieel</li>
-                            <li>⚔️ Precision is key</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- MINING TRAINER -->
-                <div id="miningtrainer" class="page">
-                    <h2 class="section-title">⛏️ Mining Trainer</h2>
-                    
-                    <div class="subsection">
-                        <h3>Efficient Mining Patterns</h3>
-                        <p style="margin-bottom: 15px;">Leer de beste manieren om te minen:</p>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div class="build-challenge">
-                                <h4>Branch Mining</h4>
-                                <p>Het meest efficiënt voor ertsen zoeken. Diagonale tunnels.</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Stripmine Pattern</h4>
-                                <p>Recht tunnelpatroon voor systematische mining.</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Cave Exploration</h4>
-                                <p>Grotten verkennen voor snelle ertsen.</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">Learn</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Best Y-Levels voor Ertsen</h3>
-                        <ul>
-                            <li>💎 Diamond: Y-5 tot Y-12</li>
-                            <li>🟥 Redstone: Y-5 tot Y-1</li>
-                            <li>🟨 Lapis: Y-15 tot Y-0</li>
-                            <li>🟧 Gold: Y-30 tot Y-0</li>
-                            <li>🟦 Iron: Y-70 tot Y-0</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- RESOURCE MANAGER -->
-                <div id="resourcemanager" class="page">
-                    <h2 class="section-title">📦 Resource Manager</h2>
-                    
-                    <div class="subsection">
-                        <h3>Voorraden Beheren</h3>
-                        <p style="margin-bottom: 15px;">Leer je resources efficiënt in te delen:</p>
-                        
-                        <div class="inventory">
-                            <div class="inventory-item">
-                                <div class="icon">⛏️</div>
-                                <div style="font-size: 12px;">Pickaxe</div>
-                                <div class="amount">5</div>
-                            </div>
-                            <div class="inventory-item">
-                                <div class="icon">🪨</div>
-                                <div style="font-size: 12px;">Stone</div>
-                                <div class="amount">128</div>
-                            </div>
-                            <div class="inventory-item">
-                                <div class="icon">💎</div>
-                                <div style="font-size: 12px;">Diamond</div>
-                                <div class="amount">12</div>
-                            </div>
-                            <div class="inventory-item">
-                                <div class="icon">🌾</div>
-                                <div style="font-size: 12px;">Wheat</div>
-                                <div class="amount">64</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Resource Priority</h3>
-                        <ol>
-                            <li>Food (meeste prioriteit)</li>
-                            <li>Tools (pickaxes, shovels)</li>
-                            <li>Building blocks</li>
-                            <li>Ores & gems</li>
-                            <li>Decoratie (laagste prioriteit)</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- SURVIVAL MODE -->
-                <div id="survivalmode" class="page">
-                    <h2 class="section-title">🌍 Survival Mode</h2>
-                    
-                    <div class="subsection">
-                        <h3>Eerste 24 uur checklist</h3>
-                        <ul>
-                            <li>✅ Hout verzamelen</li>
-                            <li>✅ Werkbank maken</li>
-                            <li>✅ Stenen tools</li>
-                            <li>✅ Schuilplek bouwen</li>
-                            <li>✅ Voedsel verzamelen</li>
-                            <li>✅ Bed maken</li>
-                        </ul>
-                    </div>
-
-                    <div class="subsection">
-                        <h3>Survival Tips</h3>
-                        <p><strong>Night Safety:</strong> Altijd in een gesloten ruimte blijven 's nachts!</p>
-                        <p><strong>Hunger:</strong> Zorg dat je goed eet, vooral bij veel activiteit.</p>
-                        <p><strong>Loot Runs:</strong> Beplan voordat je de wereld ingaat.</p>
-                    </div>
-                </div>
-
-                <!-- RECIPES -->
-                <div id="recipes" class="page">
-                    <h2 class="section-title">📖 Crafting Recipes</h2>
-                    
-                    <div class="subsection">
-                        <h3>Essentiële Recipes</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div class="build-challenge">
-                                <h4>Workbench</h4>
-                                <p>4x Planks in vierkant</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">View</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Furnace</h4>
-                                <p>8x Cobblestone rond buitenkant</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">View</button>
-                            </div>
-                            <div class="build-challenge">
-                                <h4>Bed</h4>
-                                <p>3x Planks + 3x Wool</p>
-                                <button class="btn" style="width: 100%; margin-top: 10px;">View</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LEADERBOARD -->
-                <div id="leaderboard" class="page">
-                    <h2 class="section-title">🏆 Leaderboard</h2>
-                    
-                    <div class="subsection">
-                        <h3>Top Clickspeed Players</h3>
-                        <table class="leaderboard-table">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Speler</th>
-                                    <th>CPS</th>
-                                    <th>Score</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rank gold">🥇</td>
-                                    <td>ProGamer_2024</td>
-                                    <td>11.2</td>
-                                    <td>112</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank silver">🥈</td>
-                                    <td>ClickMaster</td>
-                                    <td>10.8</td>
-                                    <td>108</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank bronze">🥉</td>
-                                    <td>SpeedRunner99</td>
-                                    <td>9.5</td>
-                                    <td>95</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>BuildKing</td>
-                                    <td>8.9</td>
-                                    <td>89</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>JavaExpert</td>
-                                    <td>8.3</td>
-                                    <td>83</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="subsection" style="margin-top: 30px;">
-                        <h3>Top Build Challenge Players</h3>
-                        <table class="leaderboard-table">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Speler</th>
-                                    <th>Challenges Compleet</th>
-                                    <th>Tijd Gemiddelde</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rank gold">🥇</td>
-                                    <td>ArchitectGod</td>
-                                    <td>28/28</td>
-                                    <td>1:45</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank silver">🥈</td>
-                                    <td>BuildRush</td>
-                                    <td>26/28</td>
-                                    <td>2:10</td>
-                                </tr>
-                                <tr>
-                                    <td class="rank bronze">🥉</td>
-                                    <td>StructureArt</td>
-                                    <td>24/28</td>
-                                    <td>2:35</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ACHIEVEMENTS -->
-                <div id="achievements" class="page">
-                    <h2 class="section-title">⭐ Achievements</h2>
-                    
-                    <div class="achievements-grid">
-                        <div class="achievement unlocked">
-                            <div class="achievement-icon">🎮</div>
-                            <h4>Eerste Stap</h4>
-                            <p>Complete je eerste training</p>
-                        </div>
-                        <div class="achievement unlocked">
-                            <div class="achievement-icon">⚔️</div>
-                            <h4>PVP Master</h4>
-                            <p>10+ CPS in clicktest</p>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon">🏗️</div>
-                            <h4>Bouwmeester</h4>
-                            <p>Alle build challenges compleet</p>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon">💎</div>
-                            <h4>Mijnbouw Expert</h4>
-                            <p>1000+ diamanten gemind</p>
-                        </div>
-                        <div class="achievement unlocked">
-                            <div class="achievement-icon">🌟</div>
-                            <h4>Verzamelaar</h4>
-                            <p>5 achievements unlock</p>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon">🔥</div>
-                            <h4>Survival Expert</h4>
-                            <p>10 uur survival</p>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon">🎯</div>
-                            <h4>Perfectionist</h4>
-                            <p>Alle challenges onder time limit</p>
-                        </div>
-                        <div class="achievement">
-                            <div class="achievement-icon">👑</div>
-                            <h4>Legend</h4>
-                            <p>#1 op leaderboard</p>
-                        </div>
+                        <h3>Leer de beste PVP combos!</h3>
+                        <p>Train je clicking skills en combat techniques in de wereld!</p>
+                        <button class="btn" onclick="startGame()">🌍 Join World</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- GAME -->
+    <div id="gameContainer">
+        <div id="crosshair"></div>
+        <div id="controls">
+            <strong>⌨️ Controls:</strong><br>
+            W/A/S/D = Move<br>
+            Mouse = Look<br>
+            Space = Jump<br>
+            Shift = Crouch<br>
+            Left Click = Break<br>
+            Right Click = Place<br>
+            1-5 = Select Block<br>
+            ESC = Menu
+        </div>
+        <div id="blockInfo">
+            <strong>Block:</strong> Grass
+        </div>
+        <div id="hud">
+            <strong>FPS:</strong> <span id="fps">0</span><br>
+            <strong>Pos:</strong> <span id="pos">0, 0, 0</span>
+        </div>
+        <button id="exitButton" onclick="exitGame()">← Back to Menu</button>
+        <div id="inventory">
+            <div class="inventory-slot selected" data-block="grass">🟩</div>
+            <div class="inventory-slot" data-block="stone">🪨</div>
+            <div class="inventory-slot" data-block="dirt">🟫</div>
+            <div class="inventory-slot" data-block="wood">🌳</div>
+            <div class="inventory-slot" data-block="sand">🟨</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // PAGE NAVIGATION - FIXED!
+        let game = null;
+        let gameActive = false;
+
+        // MENU NAVIGATION
         function switchPage(event, pageId) {
-            // Prevent default if needed
-            if (event) {
-                event.preventDefault();
-            }
+            if (event) event.preventDefault();
             
-            // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
             
-            // Show selected page
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.add('active');
             }
             
-            // Update menu buttons
             const buttons = document.querySelectorAll('.menu-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Add active class to clicked button
             if (event && event.target) {
                 event.target.classList.add('active');
             }
@@ -1164,7 +602,6 @@
             testRunning = true;
             testTime = 10;
             
-            document.getElementById('clickArea').style.opacity = '1';
             document.getElementById('clickCount').textContent = '0';
             document.getElementById('cps').textContent = '0';
             document.getElementById('clickTime').textContent = '10';
@@ -1205,16 +642,300 @@
             document.getElementById('clickTime').textContent = '10';
         }
 
-        // INITIAL LOAD
-        document.addEventListener('DOMContentLoaded', () => {
-            const userLevel = localStorage.getItem('userLevel') || '1';
-            const userXP = localStorage.getItem('userXP') || '0';
-            const achievements = localStorage.getItem('achievements') || '2/20';
+        // START GAME
+        function startGame() {
+            document.getElementById('menuContainer').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
             
-            document.getElementById('userLevel').textContent = userLevel;
-            document.getElementById('userXP').textContent = userXP;
-            document.getElementById('userAchievements').textContent = achievements;
-        });
+            if (!game) {
+                game = new MinecraftGame();
+            }
+            gameActive = true;
+        }
+
+        // EXIT GAME
+        function exitGame() {
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('menuContainer').style.display = 'flex';
+            gameActive = false;
+            document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+            document.exitPointerLock();
+        }
+
+        // MINECRAFT GAME ENGINE
+        class MinecraftGame {
+            constructor() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x87ceeb);
+                this.scene.fog = new THREE.Fog(0x87ceeb, 100, 300);
+
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 70, 0);
+
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.shadowMap.enabled = true;
+                document.getElementById('gameContainer').appendChild(this.renderer.domElement);
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                this.scene.add(ambientLight);
+
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                directionalLight.position.set(50, 100, 50);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.camera.left = -100;
+                directionalLight.shadow.camera.right = 100;
+                directionalLight.shadow.camera.top = 100;
+                directionalLight.shadow.camera.bottom = -100;
+                this.scene.add(directionalLight);
+
+                this.player = {
+                    position: new THREE.Vector3(0, 70, 0),
+                    velocity: new THREE.Vector3(0, 0, 0),
+                    height: 1.8,
+                    speed: 0.3,
+                    sprintSpeed: 0.5,
+                    jumpForce: 0.8,
+                    isGrounded: false,
+                    isCrouching: false,
+                    selectedBlock: 'grass'
+                };
+
+                this.camera.position.copy(this.player.position);
+
+                this.keys = {};
+                this.mouse = { x: 0, y: 0 };
+                this.euler = new THREE.Euler(0, 0, 0, 'YXZ');
+                this.vector = new THREE.Vector3();
+
+                this.blocks = new Map();
+                this.blockTextures = {
+                    grass: 0x2d9d2d,
+                    stone: 0x808080,
+                    dirt: 0x8b7355,
+                    wood: 0x8b4513,
+                    sand: 0xdaa520,
+                    water: 0x4466ff
+                };
+
+                this.initInputs();
+                this.generateWorld();
+                this.animate();
+            }
+
+            initInputs() {
+                window.addEventListener('keydown', (e) => {
+                    this.keys[e.key.toLowerCase()] = true;
+                    
+                    if (e.key === 'Escape') {
+                        exitGame();
+                        return;
+                    }
+                    
+                    const num = parseInt(e.key);
+                    if (num >= 1 && num <= 5) {
+                        const blocks = ['grass', 'stone', 'dirt', 'wood', 'sand'];
+                        this.player.selectedBlock = blocks[num - 1];
+                        this.updateInventoryUI();
+                    }
+                });
+
+                window.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    const movementX = e.movementX || 0;
+                    const movementY = e.movementY || 0;
+
+                    this.euler.setFromQuaternion(this.camera.quaternion);
+                    this.euler.rotateY(-movementX * 0.005);
+                    this.euler.rotateX(-movementY * 0.005);
+
+                    this.euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.euler.x));
+
+                    this.camera.quaternion.setFromEuler(this.euler);
+                });
+
+                document.addEventListener('click', () => {
+                    if (gameActive) {
+                        document.body.requestPointerLock = document.body.requestPointerLock || document.body.mozRequestPointerLock;
+                        document.body.requestPointerLock();
+                    }
+                });
+
+                document.addEventListener('mousedown', (e) => {
+                    if (gameActive) {
+                        if (e.button === 0) this.breakBlock();
+                        if (e.button === 2) this.placeBlock();
+                    }
+                });
+
+                document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            generateWorld() {
+                const groundSize = 50;
+
+                for (let x = -groundSize; x < groundSize; x++) {
+                    for (let z = -groundSize; z < groundSize; z++) {
+                        let y = 0;
+                        this.addBlock(x, y, z, 'grass');
+
+                        for (let i = 1; i < 4; i++) {
+                            this.addBlock(x, -i, z, 'dirt');
+                        }
+
+                        for (let i = 4; i < 10; i++) {
+                            this.addBlock(x, -i, z, 'stone');
+                        }
+                    }
+                }
+
+                for (let i = 0; i < 10; i++) {
+                    const tx = Math.floor(Math.random() * 80 - 40);
+                    const tz = Math.floor(Math.random() * 80 - 40);
+                    
+                    for (let y = 1; y < 5; y++) {
+                        this.addBlock(tx, y, tz, 'wood');
+                    }
+                }
+            }
+
+            addBlock(x, y, z, type) {
+                const key = `${x},${y},${z}`;
+                if (this.blocks.has(key)) return;
+
+                const geometry = new THREE.BoxGeometry(1, 1, 1);
+                const material = new THREE.MeshStandardMaterial({
+                    color: this.blockTextures[type]
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(x + 0.5, y + 0.5, z + 0.5);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+
+                this.scene.add(mesh);
+                this.blocks.set(key, {
+                    mesh: mesh,
+                    type: type,
+                    x: x,
+                    y: y,
+                    z: z
+                });
+            }
+
+            breakBlock() {
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(this.mouse, this.camera);
+
+                const blockMeshes = Array.from(this.blocks.values()).map(b => b.mesh);
+                const intersects = raycaster.intersectObjects(blockMeshes);
+
+                if (intersects.length > 0) {
+                    const mesh = intersects[0].object;
+                    for (let [key, block] of this.blocks) {
+                        if (block.mesh === mesh) {
+                            this.scene.remove(mesh);
+                            this.blocks.delete(key);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            placeBlock() {
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(this.mouse, this.camera);
+
+                const blockMeshes = Array.from(this.blocks.values()).map(b => b.mesh);
+                const intersects = raycaster.intersectObjects(blockMeshes);
+
+                if (intersects.length > 0) {
+                    const hit = intersects[0];
+                    const normal = hit.face.normal;
+                    const blockPos = new THREE.Vector3().copy(hit.object.position).sub(new THREE.Vector3(0.5, 0.5, 0.5));
+
+                    const newX = blockPos.x + normal.x;
+                    const newY = blockPos.y + normal.y;
+                    const newZ = blockPos.z + normal.z;
+
+                    this.addBlock(Math.round(newX), Math.round(newY), Math.round(newZ), this.player.selectedBlock);
+                }
+            }
+
+            updatePlayer() {
+                const speed = this.keys['shift'] ? this.player.sprintSpeed : this.player.speed;
+                const moveVector = new THREE.Vector3();
+
+                if (this.keys['w']) moveVector.z -= speed;
+                if (this.keys['s']) moveVector.z += speed;
+                if (this.keys['a']) moveVector.x -= speed;
+                if (this.keys['d']) moveVector.x += speed;
+
+                moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.euler.y);
+                this.player.position.add(moveVector);
+
+                this.player.velocity.y -= 0.02;
+
+                if (this.keys[' '] && this.player.isGrounded) {
+                    this.player.velocity.y = this.player.jumpForce;
+                    this.player.isGrounded = false;
+                }
+
+                this.player.position.y += this.player.velocity.y;
+
+                const groundLevel = 1;
+                if (this.player.position.y <= groundLevel) {
+                    this.player.position.y = groundLevel;
+                    this.player.velocity.y = 0;
+                    this.player.isGrounded = true;
+                }
+
+                if (this.keys['shift']) {
+                    this.player.isCrouching = true;
+                    this.camera.position.y = this.player.position.y + 1.2;
+                } else {
+                    this.player.isCrouching = false;
+                    this.camera.position.y = this.player.position.y + this.player.height;
+                }
+
+                this.camera.position.x = this.player.position.x;
+                this.camera.position.z = this.player.position.z;
+
+                document.getElementById('pos').textContent = 
+                    `${Math.round(this.player.position.x)}, ${Math.round(this.player.position.y)}, ${Math.round(this.player.position.z)}`;
+            }
+
+            updateInventoryUI() {
+                const slots = document.querySelectorAll('.inventory-slot');
+                slots.forEach((slot) => {
+                    const blockType = slot.getAttribute('data-block');
+                    if (blockType === this.player.selectedBlock) {
+                        slot.classList.add('selected');
+                    } else {
+                        slot.classList.remove('selected');
+                    }
+                });
+
+                document.getElementById('blockInfo').innerHTML = 
+                    `<strong>Block:</strong> ${this.player.selectedBlock.charAt(0).toUpperCase() + this.player.selectedBlock.slice(1)}`;
+            }
+
+            animate() {
+                if (gameActive) {
+                    requestAnimationFrame(() => this.animate());
+                    this.updatePlayer();
+                    this.renderer.render(this.scene, this.camera);
+                }
+            }
+        }
     </script>
 </body>
 </html>
