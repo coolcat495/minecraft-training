@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Training Simulator</title>
+    <title>Minecraft Training</title>
     <style>
         * {
             margin: 0;
@@ -419,7 +419,7 @@
             color: #aaa;
         }
 
-        /* SURVIVAL MODE */
+        /* INVENTORY */
         .inventory {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -433,6 +433,7 @@
             padding: 15px;
             border-radius: 5px;
             text-align: center;
+            position: relative;
         }
 
         .inventory-item .icon {
@@ -454,6 +455,12 @@
             position: absolute;
             right: 5px;
             bottom: 5px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            line-height: 2;
         }
 
         /* RESPONSIEF */
@@ -507,7 +514,7 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <h1>⛏️ Minecraft Training Simulator</h1>
+            <h1>⛏️ Minecraft Training</h1>
             <div class="user-stats">
                 <div class="stat">
                     <span>Level: <strong id="userLevel">1</strong></span>
@@ -527,45 +534,45 @@
             <div class="sidebar">
                 <div class="menu-section">
                     <div class="menu-title">🏠 Menu</div>
-                    <button class="menu-btn active" onclick="switchPage('home')">Home</button>
+                    <button class="menu-btn active" onclick="switchPage(event, 'home')">Home</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">⚔️ PVP Training</div>
-                    <button class="menu-btn" onclick="switchPage('clickspeed')">Clickspeed Test</button>
-                    <button class="menu-btn" onclick="switchPage('combos')">Combos Training</button>
-                    <button class="menu-btn" onclick="switchPage('shield')">Shield Tactics</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'clickspeed')">Clickspeed Test</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'combos')">Combos Training</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'shield')">Shield Tactics</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">🏗️ Build Training</div>
-                    <button class="menu-btn" onclick="switchPage('buildchallenges')">Build Challenges</button>
-                    <button class="menu-btn" onclick="switchPage('buildmode')">Creative Mode</button>
-                    <button class="menu-btn" onclick="switchPage('buildtips')">Build Tips</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'buildchallenges')">Build Challenges</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'buildmode')">Creative Mode</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'buildtips')">Build Tips</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">🎮 Versies</div>
-                    <button class="menu-btn" onclick="switchPage('bedrock')">Bedrock Edition</button>
-                    <button class="menu-btn" onclick="switchPage('java')">Java Edition</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'bedrock')">Bedrock Edition</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'java')">Java Edition</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">⛏️ Mining</div>
-                    <button class="menu-btn" onclick="switchPage('miningtrainer')">Mining Trainer</button>
-                    <button class="menu-btn" onclick="switchPage('resourcemanager')">Resource Manager</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'miningtrainer')">Mining Trainer</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'resourcemanager')">Resource Manager</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">🌍 Survival</div>
-                    <button class="menu-btn" onclick="switchPage('survivalmode')">Survival Mode</button>
-                    <button class="menu-btn" onclick="switchPage('recipes')">Recipes</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'survivalmode')">Survival Mode</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'recipes')">Recipes</button>
                 </div>
 
                 <div class="menu-section">
                     <div class="menu-title">🏆 Statistieken</div>
-                    <button class="menu-btn" onclick="switchPage('leaderboard')">Leaderboard</button>
-                    <button class="menu-btn" onclick="switchPage('achievements')">Achievements</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'leaderboard')">Leaderboard</button>
+                    <button class="menu-btn" onclick="switchPage(event, 'achievements')">Achievements</button>
                 </div>
             </div>
 
@@ -575,36 +582,36 @@
                 <div id="home" class="page active">
                     <div class="home-content">
                         <div class="logo">⛏️</div>
-                        <h2>Minecraft Training Simulator</h2>
+                        <h2>Minecraft Training</h2>
                         <p>De ultieme trainingsplatform voor Minecraft spelers! Verbeter je PVP skills, bouwvaardigheden en meer!</p>
                         
                         <div class="category-grid">
-                            <div class="category-card" onclick="switchPage('clickspeed')">
+                            <div class="category-card" onclick="switchPage(event, 'clickspeed')">
                                 <h3>⚔️</h3>
                                 <h3>PVP Training</h3>
                                 <p>Verbeter je gevechtstechnieken</p>
                             </div>
-                            <div class="category-card" onclick="switchPage('buildchallenges')">
+                            <div class="category-card" onclick="switchPage(event, 'buildchallenges')">
                                 <h3>🏗️</h3>
                                 <h3>Build Training</h3>
                                 <p>Leer sneller en mooier bouwen</p>
                             </div>
-                            <div class="category-card" onclick="switchPage('miningtrainer')">
+                            <div class="category-card" onclick="switchPage(event, 'miningtrainer')">
                                 <h3>⛏️</h3>
                                 <h3>Mining Trainer</h3>
                                 <p>Optimaliseer je mijnbouw</p>
                             </div>
-                            <div class="category-card" onclick="switchPage('survivalmode')">
+                            <div class="category-card" onclick="switchPage(event, 'survivalmode')">
                                 <h3>🌍</h3>
                                 <h3>Survival Mode</h3>
                                 <p>Overleef en beheer resources</p>
                             </div>
-                            <div class="category-card" onclick="switchPage('leaderboard')">
+                            <div class="category-card" onclick="switchPage(event, 'leaderboard')">
                                 <h3>🏆</h3>
                                 <h3>Leaderboard</h3>
                                 <p>Zie je scores en rankings</p>
                             </div>
-                            <div class="category-card" onclick="switchPage('achievements')">
+                            <div class="category-card" onclick="switchPage(event, 'achievements')">
                                 <h3>⭐</h3>
                                 <h3>Achievements</h3>
                                 <p>Behaald speciale doelen</p>
@@ -800,7 +807,7 @@
                     <div class="subsection">
                         <h3>Bedrock vs Java - Verschillen</h3>
                         <p><strong>Bedrock Edition:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>✅ Cross-platform (Switch, Mobile, Xbox)</li>
                             <li>✅ Sneller en optimaler</li>
                             <li>✅ Beter voor multiplayer</li>
@@ -812,7 +819,7 @@
                     <div class="subsection">
                         <h3>Bedrock PVP Specifics</h3>
                         <p><strong>Verschillen in combat:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>⚔️ Geen attack cooldown (altijd snel)</li>
                             <li>⚔️ Andere knockback waarden</li>
                             <li>⚔️ Shield mechanics verschillen</li>
@@ -827,7 +834,7 @@
                     <div class="subsection">
                         <h3>Java vs Bedrock - Voordelen</h3>
                         <p><strong>Java Edition:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>✅ Gratis als je het al had</li>
                             <li>✅ Enorme modding community</li>
                             <li>✅ Server mods mogelijk</li>
@@ -839,7 +846,7 @@
                     <div class="subsection">
                         <h3>Java PVP Specifics</h3>
                         <p><strong>Combat mechanics:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>⚔️ Attack cooldown systeem (CPS materie)</li>
                             <li>⚔️ Streng timing nodig</li>
                             <li>⚔️ Sprint-click is essentieel</li>
@@ -877,7 +884,7 @@
 
                     <div class="subsection">
                         <h3>Best Y-Levels voor Ertsen</h3>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>💎 Diamond: Y-5 tot Y-12</li>
                             <li>🟥 Redstone: Y-5 tot Y-1</li>
                             <li>🟨 Lapis: Y-15 tot Y-0</li>
@@ -921,7 +928,7 @@
 
                     <div class="subsection">
                         <h3>Resource Priority</h3>
-                        <ol style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ol>
                             <li>Food (meeste prioriteit)</li>
                             <li>Tools (pickaxes, shovels)</li>
                             <li>Building blocks</li>
@@ -937,7 +944,7 @@
                     
                     <div class="subsection">
                         <h3>Eerste 24 uur checklist</h3>
-                        <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                        <ul>
                             <li>✅ Hout verzamelen</li>
                             <li>✅ Werkbank maken</li>
                             <li>✅ Stenen tools</li>
@@ -1118,19 +1125,31 @@
     </div>
 
     <script>
-        // PAGE NAVIGATION
-        function switchPage(pageId) {
+        // PAGE NAVIGATION - FIXED!
+        function switchPage(event, pageId) {
+            // Prevent default if needed
+            if (event) {
+                event.preventDefault();
+            }
+            
             // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
             
             // Show selected page
-            document.getElementById(pageId).classList.add('active');
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
             // Update menu buttons
             const buttons = document.querySelectorAll('.menu-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Add active class to clicked button
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
         }
 
         // CLICKSPEED TEST
@@ -1188,7 +1207,6 @@
 
         // INITIAL LOAD
         document.addEventListener('DOMContentLoaded', () => {
-            // Load user stats from localStorage
             const userLevel = localStorage.getItem('userLevel') || '1';
             const userXP = localStorage.getItem('userXP') || '0';
             const achievements = localStorage.getItem('achievements') || '2/20';
