@@ -1,111 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Minecraft Arena Fix</title>
+    <title>Minecraft Arena - Debug Mode</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; }
-        #instructions { 
-            position: absolute; top: 50%; width: 100%; text-align: center; 
-            color: white; font-family: sans-serif; font-weight: bold;
-            text-shadow: 2px 2px #000; z-index: 10; cursor: pointer;
+        /* Alles in één bestand om blokkades te voorkomen */
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Courier New', monospace; color: white; }
+        #overlay { 
+            position: absolute; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; background: rgba(0,0,0,0.8); z-index: 100; 
+            cursor: pointer; text-align: center;
         }
-        #hud { position: absolute; bottom: 10px; left: 10px; color: lime; font-family: monospace; z-index: 5; }
+        #gui { position: absolute; bottom: 20px; left: 20px; color: #4caf50; z-index: 10; font-weight: bold; }
+        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 24px; z-index: 5; pointer-events: none; }
+        
+        /* De Arena Style (CSS 3D Engine - werkt zonder externe scripts!) */
+        #viewport { width: 100vw; height: 100vh; perspective: 800px; display: flex; justify-content: center; align-items: center; }
+        #world { width: 0; height: 0; transform-style: preserve-3d; transition: transform 0.05s linear; }
+        .block { position: absolute; transform-style: preserve-3d; }
+        .face { position: absolute; width: 100px; height: 100px; border: 1px solid rgba(255,255,255,0.2); }
+        .floor { background: #2d5016; transform: rotateX(90deg) translateZ(0); width: 1000px; height: 1000px; left: -500px; top: -500px; }
+        .wall { background: rgba(255, 255, 255, 0.1); border: 2px solid #4caf50; width: 1000px; height: 200px; }
     </style>
 </head>
 <body>
 
-    <div id="instructions" onclick="controls.lock()">
-        <h1>ARENA LADEN VOLTOOID</h1>
-        <p>KLIK HIER OM TE BEWEGEN</p>
-        <p>(WASD + MUIS)</p>
+    <div id="overlay" onclick="startEngine()">
+        <h1 style="color: #4caf50;">MINECRAFT ARENA</h1>
+        <p>ER IS EEN PROBLEEM MET HET LADEN VAN EXTERNE SCRIPTS.</p>
+        <p style="background: #444; padding: 10px; border-radius: 5px;">KLIK HIER OM DE NOOD-ARENA TE STARTEN</p>
+        <p style="font-size: 12px; margin-top: 20px;">(Besturing: W, A, S, D + Pijltjestoetsen)</p>
     </div>
-    <div id="hud">Systeem status: ONLINE</div>
 
-    <script src="https://cdnjs.cloudflare.com"></script>
-    <script src="https://cdn.jsdelivr.net"></script>
+    <div id="crosshair">+</div>
+    <div id="gui">Status: NOOD-ENGINE ACTIEF (Geen externe scripts nodig)</div>
+
+    <div id="viewport">
+        <div id="world">
+            <!-- De Arena Vloer -->
+            <div class="block floor"></div>
+            <!-- De Muren -->
+            <div class="face wall" style="transform: translateZ(500px) translateY(-200px) translateX(-500px);"></div>
+            <div class="face wall" style="transform: translateZ(-500px) translateY(-200px) translateX(-500px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translateZ(500px) translateY(-200px) translateX(-500px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translateZ(-500px) translateY(-200px) translateX(-500px);"></div>
+        </div>
+    </div>
 
     <script>
-        // 1. Scene setup
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // Blauwe lucht
+        let posX = 0, posZ = 0, rotY = 0, rotX = -10;
+        let keys = {};
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 5, 15); // Startpositie: iets naar achteren en omhoog
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // 2. Arena Objecten
-        // De Grond (Groen)
-        const ground = new THREE.Mesh(
-            new THREE.PlaneGeometry(40, 40),
-            new THREE.MeshBasicMaterial({ color: 0x2d5016, side: THREE.DoubleSide })
-        );
-        ground.rotation.x = Math.PI / 2;
-        scene.add(ground);
-
-        // Grid (Hulplijnen op de grond)
-        const grid = new THREE.GridHelper(40, 40, 0xffffff, 0x444444);
-        scene.add(grid);
-
-        // De Arena Muren (Roodachtig voor zichtbaarheid)
-        const wallMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-        const wallGeo = new THREE.BoxGeometry(40, 10, 1);
-        
-        const wall1 = new THREE.Mesh(wallGeo, wallMat); wall1.position.set(0, 5, -20); scene.add(wall1);
-        const wall2 = new THREE.Mesh(wallGeo, wallMat); wall2.position.set(0, 5, 20); scene.add(wall2);
-        const wall3 = new THREE.Mesh(wallGeo, wallMat); wall3.position.set(-20, 5, 0); wall3.rotation.y = Math.PI/2; scene.add(wall3);
-        const wall4 = new THREE.Mesh(wallGeo, wallMat); wall4.position.set(20, 5, 0); wall4.rotation.y = Math.PI/2; scene.add(wall4);
-
-        // 3. Besturing
-        const controls = new THREE.PointerLockControls(camera, document.body);
-        
-        controls.addEventListener('lock', () => {
-            document.getElementById('instructions').style.display = 'none';
-        });
-        controls.addEventListener('unlock', () => {
-            document.getElementById('instructions').style.display = 'block';
-        });
-
-        // Beweging
-        let moveF = false, moveB = false, moveL = false, moveR = false;
-        document.addEventListener('keydown', (e) => {
-            if(e.code === 'KeyW') moveF = true;
-            if(e.code === 'KeyS') moveB = true;
-            if(e.code === 'KeyA') moveL = true;
-            if(e.code === 'KeyD') moveR = true;
-        });
-        document.addEventListener('keyup', (e) => {
-            if(e.code === 'KeyW') moveF = false;
-            if(e.code === 'KeyS') moveB = false;
-            if(e.code === 'KeyA') moveL = false;
-            if(e.code === 'KeyD') moveR = false;
-        });
-
-        // 4. Render Loop
-        function animate() {
-            requestAnimationFrame(animate);
-            if (controls.isLocked) {
-                if(moveF) controls.moveForward(0.2);
-                if(moveB) controls.moveForward(-0.2);
-                if(moveL) controls.moveRight(-0.2);
-                if(moveR) controls.moveRight(0.2);
-                
-                // Houd speler op de grond
-                camera.position.y = 2; 
-            }
-            renderer.render(scene, camera);
+        function startEngine() {
+            document.getElementById('overlay').style.display = 'none';
+            animate();
         }
-        animate();
 
-        // Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        function animate() {
+            // Beweging (WASD)
+            const speed = 5;
+            if (keys['KeyW']) { posX -= Math.sin(rotY * Math.PI / 180) * speed; posZ += Math.cos(rotY * Math.PI / 180) * speed; }
+            if (keys['KeyS']) { posX += Math.sin(rotY * Math.PI / 180) * speed; posZ -= Math.cos(rotY * Math.PI / 180) * speed; }
+            if (keys['KeyA']) { posX -= Math.cos(rotY * Math.PI / 180) * speed; posZ -= Math.sin(rotY * Math.PI / 180) * speed; }
+            if (keys['KeyD']) { posX += Math.cos(rotY * Math.PI / 180) * speed; posZ += Math.sin(rotY * Math.PI / 180) * speed; }
+
+            // Rondkijken (Pijltjestoetsen ter vervanging van muis voor stabiliteit)
+            if (keys['ArrowLeft']) rotY += 3;
+            if (keys['ArrowRight']) rotY -= 3;
+            if (keys['ArrowUp']) rotX -= 2;
+            if (keys['ArrowDown']) rotX += 2;
+
+            // Wereld updaten
+            const world = document.getElementById('world');
+            world.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${posX}px, 150px, ${posZ}px)`;
+
+            requestAnimationFrame(animate);
+        }
     </script>
 </body>
 </html>
