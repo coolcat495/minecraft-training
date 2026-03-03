@@ -2,47 +2,49 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Minecraft Desert Arena - Build & Battle</title>
+    <title>Minecraft Desert Arena - 200 Blocks Edition</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #87CEEB; font-family: 'Courier New', monospace; }
-        #menu { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
-        .btn { padding: 15px 40px; margin: 10px; background: #c6a664; border: 4px solid #856d3e; color: white; font-size: 20px; cursor: pointer; min-width: 250px; text-shadow: 2px 2px #000; }
-        .btn:hover { background: #e0c080; }
+        #menu { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        .btn { padding: 15px 40px; margin: 10px; background: #c6a664; border: 4px solid #856d3e; color: white; font-size: 20px; cursor: pointer; min-width: 250px; text-shadow: 2px 2px #000; box-shadow: 0 5px 0 #5d4037; }
+        .btn:hover { background: #4caf50; border-color: #1e3b0e; transform: translateY(-2px); }
         
         /* HOTBAR */
-        #hotbar { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(0,0,0,0.5); border: 4px solid #333; padding: 2px; z-index: 100; }
-        .slot { width: 50px; height: 50px; border: 4px solid #8b8b8b; margin: 2px; background-size: 30px; background-position: center; background-repeat: no-repeat; image-rendering: pixelated; }
-        .slot.active { border-color: #fff; box-shadow: inset 0 0 10px #fff; background-color: rgba(255,255,255,0.2); }
+        #hotbar { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(0,0,0,0.6); border: 4px solid #333; padding: 2px; z-index: 100; }
+        .slot { width: 50px; height: 50px; border: 4px solid #8b8b8b; margin: 2px; background-size: 32px; background-position: center; background-repeat: no-repeat; image-rendering: pixelated; }
+        .slot.active { border-color: #fff; background-color: rgba(255,255,255,0.3); }
 
-        /* VIEWMODELS (Handen/Zwaard) */
-        #viewmodel { position: absolute; bottom: -20px; right: 10%; width: 350px; height: 350px; pointer-events: none; z-index: 50; transition: transform 0.1s; }
-        #arm { position: absolute; bottom: -80px; right: 30px; width: 90px; height: 240px; background: #ffdbac; border: 4px solid #ccac8a; transform: rotate(-15deg); }
-        #item-in-hand { position: absolute; bottom: 80px; right: 40px; width: 160px; height: 160px; background-size: contain; background-repeat: no-repeat; transform: rotate(-25deg); transition: 0.1s; }
-        .swing { transform: rotate(-45deg) translateY(-60px) !important; }
+        /* VIEWMODEL (Hand & Sword) */
+        #viewmodel { position: absolute; bottom: -30px; right: 10%; width: 400px; height: 400px; pointer-events: none; z-index: 50; transition: transform 0.1s; }
+        #arm { position: absolute; bottom: -100px; right: 40px; width: 100px; height: 280px; background: #ffdbac; border: 4px solid #ccac8a; transform: rotate(-15deg); }
+        #sword-img { position: absolute; bottom: 100px; right: 60px; width: 180px; height: 180px; background-image: url('https://minecraft.wiki'); background-size: contain; background-repeat: no-repeat; transform: rotate(-25deg); }
+        .swing { transform: rotate(-45deg) translateY(-80px) !important; }
 
-        /* STEVE MODEL (3rd Person) */
-        #steve { position: absolute; width: 60px; height: 140px; transform-style: preserve-3d; display: none; }
-        #steve-head { position: absolute; width: 40px; height: 40px; background: #ffdbac; left: 10px; top: -40px; border: 2px solid #000; }
-        #steve-body { position: absolute; width: 40px; height: 60px; background: #00acc1; left: 10px; top: 0; border: 2px solid #000; }
-        #steve-legs { position: absolute; width: 40px; height: 60px; background: #3f51b5; left: 10px; top: 60px; border: 2px solid #000; }
+        /* STEVE MODEL */
+        #steve { position: absolute; width: 60px; height: 160px; transform-style: preserve-3d; display: none; }
+        #s-head { position: absolute; width: 40px; height: 40px; background: #ffdbac; left: 10px; top: -40px; border: 3px solid #000; }
+        #s-body { position: absolute; width: 45px; height: 70px; background: #00acc1; left: 7.5px; top: 0; border: 3px solid #000; }
+        #s-legs { position: absolute; width: 45px; height: 70px; background: #3f51b5; left: 7.5px; top: 70px; border: 3px solid #000; }
 
-        /* WORLD ENGINE */
-        #viewport { width: 100vw; height: 100vh; perspective: 900px; display: flex; justify-content: center; align-items: center; }
+        /* WORLD */
+        #viewport { width: 100vw; height: 100vh; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
         #world { width: 0; height: 0; transform-style: preserve-3d; }
         .face { position: absolute; transform-style: preserve-3d; }
-        .sand { width: 4000px; height: 4000px; background: #eedc9a; background-image: radial-gradient(#d4c282 10%, transparent 10%); background-size: 50px 50px; transform: rotateX(90deg) translate3d(-2000px, -2000px, 0); }
-        .wall { width: 4000px; height: 1000px; background: #d2b48c; border: 20px solid #a0522d; opacity: 0.9; }
-        .tree { width: 40px; height: 200px; background: #5d4037; position: absolute; }
-        .leaves { width: 120px; height: 120px; background: #2e7d32; position: absolute; top: -100px; left: -40px; border-radius: 10%; }
+        .sand { width: 4000px; height: 4000px; background: #eedc9a; background-image: url('https://minecraft.wiki'); background-size: 50px; transform: rotateX(90deg) translate3d(-2000px, -2000px, 0); }
+        .wall { width: 4000px; height: 800px; background: #d2b48c; border: 20px solid #a0522d; box-sizing: border-box; }
+        
+        /* DECORATION */
+        .tree { width: 50px; height: 250px; background: #5d4037; position: absolute; transform-style: preserve-3d; border: 2px solid #000; }
+        .leaves { width: 150px; height: 150px; background: #2e7d32; position: absolute; top: -120px; left: -50px; border: 4px solid #1b4d1e; }
     </style>
 </head>
 <body onmousedown="handleAction(event)">
 
     <div id="menu">
-        <h1 style="color: #eedc9a; font-size: 50px; text-shadow: 4px 4px #000;">DESERT BATTLE ARENA</h1>
-        <button class="btn" onclick="start(false)">PVP MODE (SURVIVAL)</button>
-        <button class="btn" onclick="start(true)">BUILD MODE (CREATIVE)</button>
-        <p style="color: #ddd;">F4 = Camera | 1-9 = Hotbar | W-A-S-D = Bewegen</p>
+        <h1 style="color: #eedc9a; font-size: 60px; text-shadow: 5px 5px #000;">DESERT ARENA</h1>
+        <button class="btn" onclick="start(false)">PVP MODE (ZWAARD)</button>
+        <button class="btn" onclick="start(true)">BUILD MODE (VLIEGEN)</button>
+        <p>1-9 = Hotbar | 4 = Camera | WASD = Lopen</p>
     </div>
 
     <div id="hotbar">
@@ -50,50 +52,39 @@
         <div class="slot" id="s2" style="background-image: url('https://minecraft.wiki');"></div>
         <div class="slot" id="s3" style="background-image: url('https://minecraft.wiki');"></div>
         <div class="slot" id="s4" style="background-image: url('https://minecraft.wiki');"></div>
-        <div class="slot" id="s5" style="background-image: url('https://minecraft.wiki');"></div>
-        <div class="slot" id="s6"></div><div class="slot" id="s7"></div><div class="slot" id="s8"></div><div class="slot" id="s9"></div>
+        <div class="slot" id="s5"></div><div class="slot" id="s6"></div><div class="slot" id="s7"></div><div class="slot" id="s8"></div><div class="slot" id="s9"></div>
     </div>
 
     <div id="viewmodel">
-        <div id="item-in-hand" style="background-image: url('https://minecraft.wiki');"></div>
+        <div id="sword-img"></div>
         <div id="arm"></div>
     </div>
 
     <div id="viewport">
         <div id="world">
-            <div id="steve">
-                <div id="steve-head"></div><div id="steve-body"></div><div id="steve-legs"></div>
-            </div>
+            <div id="steve"><div id="s-head"></div><div id="s-body"></div><div id="s-legs"></div></div>
             <div class="face sand"></div>
-            <!-- Muren -->
-            <div class="face wall" style="transform: translate3d(-2000px, -1000px, 2000px);"></div>
-            <div class="face wall" style="transform: translate3d(-2000px, -1000px, -2000px);"></div>
-            <div class="face wall" style="transform: rotateY(90deg) translate3d(-2000px, -1000px, 2000px);"></div>
-            <div class="face wall" style="transform: rotateY(90deg) translate3d(-2000px, -1000px, -2000px);"></div>
-            <!-- Simpele Boomen -->
-            <div style="transform: translate3d(500px, -200px, 500px)" class="face tree"><div class="leaves"></div></div>
-            <div style="transform: translate3d(-800px, -200px, -400px)" class="face tree"><div class="leaves"></div></div>
+            <!-- Arena Muren (200 blocks size) -->
+            <div class="face wall" style="transform: translate3d(-2000px, -800px, 2000px);"></div>
+            <div class="face wall" style="transform: translate3d(-2000px, -800px, -2000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-2000px, -800px, 2000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-2000px, -800px, -2000px);"></div>
+            <!-- Bomen op afstand -->
+            <div style="transform: translate3d(800px, -250px, 800px)" class="face tree"><div class="leaves"></div></div>
+            <div style="transform: translate3d(-1200px, -250px, -600px)" class="face tree"><div class="leaves"></div></div>
         </div>
     </div>
 
     <script>
         let posX = 0, posZ = 0, posY = 0, rotY = 0, rotX = 0, velY = 0;
-        let keys = {}, creative = false, viewMode = 0; // 0=1st, 1=3rd, 2=2nd
+        let keys = {}, creative = false, viewMode = 0;
         let activeSlot = 1;
-
-        const items = {
-            1: 'https://minecraft.wiki',
-            2: 'https://minecraft.wiki',
-            3: 'https://minecraft.wiki',
-            4: 'https://minecraft.wiki',
-            5: 'https://minecraft.wiki'
-        };
 
         function start(mode) {
             creative = mode;
             document.getElementById('menu').style.display = 'none';
             document.body.requestPointerLock();
-            if(creative) switchSlot(2); // Start met blokken in build mode
+            if(creative) switchSlot(2);
             animate();
         }
 
@@ -101,8 +92,8 @@
             document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
             document.getElementById('s'+n).classList.add('active');
             activeSlot = n;
-            const img = items[n] || '';
-            document.getElementById('item-in-hand').style.backgroundImage = `url('${img}')`;
+            // Alleen zwaard zichtbaar in slot 1
+            document.getElementById('sword-img').style.opacity = (n === 1) ? "1" : "0";
         }
 
         function handleAction(e) {
@@ -114,7 +105,7 @@
         window.addEventListener('keydown', e => {
             keys[e.code] = true;
             if(e.key >= '1' && e.key <= '9') switchSlot(parseInt(e.key));
-            if(e.code === 'F4') {
+            if(e.key === '4') {
                 viewMode = (viewMode + 1) % 3;
                 document.getElementById('steve').style.display = viewMode === 0 ? "none" : "block";
                 document.getElementById('viewmodel').style.display = viewMode === 0 ? "block" : "none";
@@ -131,7 +122,7 @@
         });
 
         function animate() {
-            const speed = creative ? 15 : 8;
+            const speed = creative ? 18 : 9;
             const rad = rotY * Math.PI / 180;
 
             let nX = posX, nZ = posZ;
@@ -140,26 +131,27 @@
             if (keys['KeyA']) { nX -= Math.cos(rad) * speed; nZ -= Math.sin(rad) * speed; }
             if (keys['KeyD']) { nX += Math.cos(rad) * speed; nZ += Math.sin(rad) * speed; }
 
-            if (Math.abs(nX) < 1900) posX = nX;
-            if (Math.abs(nZ) < 1900) posZ = nZ;
+            // Collision (Arena is 200 blocks groot)
+            if (Math.abs(nX) < 1950) posX = nX;
+            if (Math.abs(nZ) < 1950) posZ = nZ;
 
             if (creative) {
                 if (keys['Space']) posY += speed;
                 if (keys['ShiftLeft']) posY -= speed;
             } else {
-                if (keys['Space'] && posY <= 0) velY = 12;
+                if (keys['Space'] && posY <= 0) velY = 14;
                 posY += velY;
-                if (posY > 0) velY -= 0.8; else { posY = 0; velY = 0; }
+                if (posY > 0) velY -= 0.9; else { posY = 0; velY = 0; }
             }
 
-            // Steve Model updaten
+            // Steve Model
             const steve = document.getElementById('steve');
             steve.style.transform = `translate3d(${-posX}px, ${-posY-20}px, ${-posZ}px) rotateY(${-rotY}deg)`;
 
-            // Camera instellingen
+            // Camera
             let cZ = 0, cY = 160 + posY, cRotY = rotY;
-            if (viewMode === 1) { cZ = -500; } // Achterkant
-            if (viewMode === 2) { cZ = 500; cRotY = rotY + 180; } // Voorkant
+            if (viewMode === 1) cZ = -550; 
+            if (viewMode === 2) { cZ = 550; cRotY = rotY + 180; }
 
             const world = document.getElementById('world');
             world.style.transform = `rotateX(${rotX}deg) rotateY(${cRotY}deg) translate3d(${posX}px, ${cY}px, ${posZ}px) translateZ(${cZ}px)`;
