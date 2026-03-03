@@ -2,164 +2,118 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Minecraft Arena - Mirrored & Better</title>
+    <title>Minecraft Battle & Build Pro</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #4a90e2; font-family: 'Courier New', monospace; color: white; }
-        #overlay { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.85); z-index: 1000; cursor: pointer; }
-        #gui { position: absolute; bottom: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.7); padding: 15px; border: 3px solid #00ffff; box-shadow: 0 0 15px #00ffff; }
-        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 30px; z-index: 5; pointer-events: none; }
-
-        /* VERBETERD PIXEL ZWAARD */
-        #hand-container { position: absolute; bottom: -40px; right: 5%; width: 300px; height: 300px; pointer-events: none; z-index: 50; transition: transform 0.08s; transform-origin: bottom right; }
-        #sword-pixel-art { 
-            position: absolute; bottom: 80px; right: 80px; width: 16px; height: 16px;
-            background: #00ffff;
-            box-shadow: 
-                /* De Kling (Diamond) */
-                16px -16px 0 #00ffff, 32px -32px 0 #00ffff, 48px -48px 0 #00ffff, 64px -64px 0 #00ffff, 80px -80px 0 #00ffff, 96px -96px 0 #00ffff, 112px -112px 0 #00ffff,
-                /* De Donkere Randen */
-                0px -16px 0 #008b8b, 16px -32px 0 #008b8b, 32px -48px 0 #008b8b, 48px -64px 0 #008b8b, 64px -80px 0 #008b8b, 80px -96px 0 #008b8b, 96px -112px 0 #008b8b, 112px -128px 0 #008b8b,
-                16px 0px 0 #008b8b, 32px -16px 0 #008b8b, 48px -32px 0 #008b8b, 64px -48px 0 #008b8b, 80px -64px 0 #008b8b, 96px -80px 0 #008b8b, 112px -96px 0 #008b8b, 128px -112px 0 #008b8b,
-                /* De Guard (Goud/Hout) */
-                -16px 16px 0 #daa520, -32px 32px 0 #daa520, 0px 16px 0 #daa520, -16px 0px 0 #daa520,
-                /* Het Handvat */
-                -32px 48px 0 #8b4513, -48px 64px 0 #8b4513, -64px 80px 0 #8b4513;
-            transform: rotate(-15deg);
-        }
-        .swing { transform: rotate(-55deg) translateY(-60px) translateX(-30px) !important; }
-
-        /* VERBETERDE MAP */
-        #viewport { width: 100vw; height: 100vh; perspective: 1100px; display: flex; justify-content: center; align-items: center; }
-        #world { width: 0; height: 0; transform-style: preserve-3d; }
-        .face { position: absolute; transform-style: preserve-3d; }
+        body { margin: 0; overflow: hidden; background-color: #87CEEB; font-family: 'Courier New', monospace; }
+        #menu { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; text-align: center; }
+        .btn { padding: 15px 40px; margin: 10px; background: #555; border: 4px solid #000; color: white; font-size: 20px; cursor: pointer; min-width: 250px; }
+        .btn:hover { background: #4caf50; }
         
-        .floor { 
-            width: 3000px; height: 3000px; background: #356322; 
-            background-image: 
-                radial-gradient(#4a8532 20%, transparent 20%),
-                repeating-linear-gradient(0deg, transparent, transparent 99px, #2a4d1b 100px), 
-                repeating-linear-gradient(90deg, transparent, transparent 99px, #2a4d1b 100px);
-            background-size: 50px 50px, 100px 100px, 100px 100px;
-            transform: rotateX(90deg) translate3d(-1500px, -1500px, 0); 
-        }
-        .wall { width: 3000px; height: 800px; background: rgba(0, 255, 255, 0.1); border: 15px solid #00ffff; box-shadow: inset 0 0 50px #00ffff; }
-        .block { width: 100px; height: 100px; background: #5a5a5a; border: 4px solid #000; position: absolute; }
+        /* HOTBAR */
+        #hotbar { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(0,0,0,0.5); border: 4px solid #333; padding: 2px; z-index: 100; }
+        .slot { width: 50px; height: 50px; border: 4px solid #8b8b8b; margin: 2px; background-size: 35px; background-position: center; background-repeat: no-repeat; }
+        .active { border-color: #fff; box-shadow: inset 0 0 10px #fff; }
+
+        /* HAND & SWORD */
+        #viewmodel { position: absolute; bottom: -20px; right: 10%; width: 350px; height: 350px; pointer-events: none; z-index: 50; transition: transform 0.1s; }
+        #arm { position: absolute; bottom: -80px; right: 30px; width: 100px; height: 250px; background: #ffdbac; border: 4px solid #ccac8a; transform: rotate(-15deg); }
+        #sword { position: absolute; bottom: 80px; right: 60px; width: 150px; height: 150px; background: url('https://minecraft.wiki') no-repeat center; background-size: contain; transform: rotate(-25deg); }
+        .swing { transform: rotate(-45deg) translateY(-60px) !important; }
+
+        /* WORLD ENGINE */
+        #viewport { width: 100vw; height: 100vh; perspective: 900px; display: flex; justify-content: center; align-items: center; }
+        #world { width: 0; height: 0; transform-style: preserve-3d; }
+        .face { position: absolute; transform-style: preserve-3d; backface-visibility: hidden; }
+        .floor { width: 2000px; height: 2000px; background: #3d6b28; background-image: url('https://minecraft.wiki'); background-size: 64px; transform: rotateX(90deg) translate3d(-1000px, -1000px, 0); }
+        .wall { width: 2000px; height: 800px; background: #7a7a7a; border: 10px solid #555; background-image: url('https://minecraft.wiki'); background-size: 100px; }
     </style>
 </head>
 <body onmousedown="handleAction(event)">
 
-    <div id="overlay" onclick="startEngine()">
-        <h1 style="color: #00ffff; font-size: 55px; text-shadow: 5px 5px #000;">ARENA: MIRROR EDITION</h1>
-        <button style="padding: 20px 40px; font-size: 24px; background: #00ffff; color: #000; border: none; cursor: pointer; font-weight: bold;">ENTER MIRROR WORLD</button>
-        <p style="margin-top: 25px; font-size: 18px;">GESPIEGELDE BESTURING ACTIEF</p>
+    <div id="menu">
+        <h1 style="color: #4caf50; font-size: 50px;">MINECRAFT TRAINING</h1>
+        <button class="btn" onclick="start(false)">PVP MODE (SURVIVAL)</button>
+        <button class="btn" onclick="start(true)">BUILD MODE (CREATIVE)</button>
     </div>
 
-    <div id="crosshair">+</div>
-
-    <div id="hand-container">
-        <div id="sword-pixel-art"></div>
+    <div id="hotbar">
+        <div class="slot active" style="background-image: url('https://minecraft.wiki');"></div>
+        <div class="slot" style="background-image: url('https://minecraft.wiki');"></div>
+        <div class="slot" style="background-image: url('https://minecraft.wiki');"></div>
+        <div class="slot" style="background-image: url('https://minecraft.wiki');"></div>
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
     </div>
 
-    <div id="gui">
-        MODE: <span id="mode-text">SURVIVAL</span><br>
-        MIRROR-LINK: <span style="color:red">CONNECTED</span>
+    <div id="viewmodel">
+        <div id="sword"></div>
+        <div id="arm"></div>
     </div>
 
     <div id="viewport">
         <div id="world">
             <div class="face floor"></div>
-            <div class="face wall" style="transform: translate3d(-1500px, -800px, 1500px);"></div>
-            <div class="face wall" style="transform: translate3d(-1500px, -800px, -1500px);"></div>
-            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1500px, -800px, 1500px);"></div>
-            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1500px, -800px, -1500px);"></div>
-            <div id="placed-blocks"></div>
+            <div class="face wall" style="transform: translate3d(-1000px, -800px, 1000px);"></div>
+            <div class="face wall" style="transform: translate3d(-1000px, -800px, -1000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -800px, 1000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -800px, -1000px);"></div>
         </div>
     </div>
 
     <script>
         let posX = 0, posZ = 0, posY = 0, rotY = 0, rotX = 0, velY = 0;
-        let keys = {};
-        let isBuildMode = false;
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let keys = {}, creative = false;
 
-        function playSound(f, t, d) {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = t; o.frequency.setValueAtTime(f, audioCtx.currentTime);
-            o.connect(g); g.connect(audioCtx.destination);
-            g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + d);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        }
-
-        function startEngine() {
-            document.getElementById('overlay').style.display = 'none';
+        function start(mode) {
+            creative = mode;
+            document.getElementById('menu').style.display = 'none';
             document.body.requestPointerLock();
-            audioCtx.resume();
             animate();
         }
 
         function handleAction(e) {
-            if (e.button === 0) {
-                document.getElementById('hand-container').classList.add('swing');
-                playSound(180, 'sine', 0.12);
-                setTimeout(() => document.getElementById('hand-container').classList.remove('swing'), 100);
-            } else if (e.button === 2 && isBuildMode) {
-                placeBlock();
-                playSound(300, 'square', 0.08);
-            }
+            const vm = document.getElementById('viewmodel');
+            vm.classList.add('swing');
+            setTimeout(() => vm.classList.remove('swing'), 100);
         }
 
-        window.addEventListener('contextmenu', e => e.preventDefault());
-        window.addEventListener('keydown', e => {
-            keys[e.code] = true;
-            if (e.code === 'KeyB') {
-                isBuildMode = !isBuildMode;
-                document.getElementById('mode-text').innerText = isBuildMode ? "CREATIVE (FLY)" : "SURVIVAL";
-            }
-        });
+        window.addEventListener('keydown', e => keys[e.code] = true);
         window.addEventListener('keyup', e => keys[e.code] = false);
 
-        // GESPIEGELDE MUISBESTURING
         document.addEventListener('mousemove', e => {
             if (document.pointerLockElement === document.body) {
-                rotY += e.movementX * 0.2; // Spiegelen: WAS -=, NU +=
-                rotX += e.movementY * 0.2; // Spiegelen: WAS -=, NU +=
-                rotX = Math.max(-75, Math.min(75, rotX));
+                rotY -= e.movementX * 0.15;
+                rotX -= e.movementY * 0.15;
+                rotX = Math.max(-85, Math.min(85, rotX)); // Niet door grond kijken
             }
         });
 
-        function placeBlock() {
-            const b = document.createElement('div');
-            b.className = 'block';
-            let bx = Math.round(-posX / 100) * 100 - 50;
-            let bz = Math.round(-posZ / 100) * 100 - 50;
-            b.style.transform = `translate3d(${bx}px, ${-posY - 50}px, ${bz}px)`;
-            document.getElementById('placed-blocks').appendChild(b);
-        }
-
         function animate() {
-            const speed = isBuildMode ? 16 : 9;
+            const speed = creative ? 15 : 8;
             const rad = rotY * Math.PI / 180;
 
-            if (keys['KeyW']) { posX -= Math.sin(rad) * speed; posZ += Math.cos(rad) * speed; }
-            if (keys['KeyS']) { posX += Math.sin(rad) * speed; posZ -= Math.cos(rad) * speed; }
-            
-            // GESPIEGELDE A EN D
-            if (keys['KeyA']) { posX += Math.cos(rad) * speed; posZ += Math.sin(rad) * speed; } // Was naar links, nu rechts
-            if (keys['KeyD']) { posX -= Math.cos(rad) * speed; posZ -= Math.sin(rad) * speed; } // Was naar rechts, nu links
+            let nextX = posX, nextZ = posZ;
+            if (keys['KeyW']) { nextX -= Math.sin(rad) * speed; nextZ += Math.cos(rad) * speed; }
+            if (keys['KeyS']) { nextX += Math.sin(rad) * speed; nextZ -= Math.cos(rad) * speed; }
+            if (keys['KeyA']) { nextX -= Math.cos(rad) * speed; nextZ -= Math.sin(rad) * speed; }
+            if (keys['KeyD']) { nextX += Math.cos(rad) * speed; nextZ += Math.sin(rad) * speed; }
 
-            if (isBuildMode) {
+            // COLLISION: Niet door muren (2000x2000 arena)
+            if (Math.abs(nextX) < 950) posX = nextX;
+            if (Math.abs(nextZ) < 950) posZ = nextZ;
+
+            // FLY vs JUMP
+            if (creative) {
                 if (keys['Space']) posY += speed;
                 if (keys['ShiftLeft']) posY -= speed;
             } else {
-                if (keys['Space'] && posY <= 0) velY = 15;
+                if (keys['Space'] && posY <= 0) velY = 12;
                 posY += velY;
-                if (posY > 0) velY -= 1.0; else { posY = 0; velY = 0; }
+                if (posY > 0) velY -= 0.8; else { posY = 0; velY = 0; }
             }
 
             const world = document.getElementById('world');
-            world.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${posX}px, ${200 + posY}px, ${posZ}px)`;
+            // Zorg dat we nooit "onder" de grond kijken
+            world.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${posX}px, ${160 + posY}px, ${posZ}px)`;
             requestAnimationFrame(animate);
         }
     </script>
