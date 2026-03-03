@@ -2,219 +2,101 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Training Center - Arena</title>
+    <title>Minecraft Training Arena</title>
     <style>
-        /* RESET & BASIS */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a1a; color: #fff; overflow: hidden; }
-
-        /* MENU STYLES */
-        #menuContainer { 
-            width: 100%; height: 100vh; display: flex; flex-direction: column; 
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d5016 100%); 
-            position: absolute; z-index: 100; 
-        }
-        .header { background: rgba(0, 0, 0, 0.85); padding: 20px 40px; border-bottom: 4px solid #4caf50; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 32px; color: #4caf50; text-shadow: 2px 2px #000; letter-spacing: 2px; }
-        .content { flex: 1; display: flex; }
-        .sidebar { width: 280px; background: rgba(0, 0, 0, 0.9); border-right: 3px solid #2d5016; padding: 30px; }
-        .menu-btn { 
-            width: 100%; padding: 15px; margin-bottom: 15px; background: #333; 
-            border: 2px solid #4caf50; color: #fff; border-radius: 4px; 
-            cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s;
-        }
-        .menu-btn:hover { background: #4caf50; color: #000; transform: translateX(10px); }
-        .main-area { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.2); }
-
-        /* GAME UI */
-        #gameContainer { display: none; width: 100%; height: 100vh; position: relative; }
-        #canvas { display: block; width: 100%; height: 100%; }
-        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; color: #fff; font-size: 30px; pointer-events: none; display: flex; justify-content: center; align-items: center; }
-        #crosshair::after { content: '+'; }
-        #hud { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); padding: 15px; border: 2px solid #4caf50; pointer-events: none; }
-        #instructions { position: absolute; top: 15%; width: 100%; text-align: center; font-weight: bold; font-size: 20px; text-shadow: 2px 2px #000; pointer-events: none; }
+        body { margin: 0; overflow: hidden; background-color: #000; font-family: sans-serif; }
+        #menu { position: absolute; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #1a1a1a; color: white; }
+        .btn { padding: 15px 30px; background: #4caf50; border: none; color: white; font-size: 20px; cursor: pointer; border-radius: 5px; }
+        #gui { position: absolute; bottom: 10px; left: 10px; color: white; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <!-- MENU SCHERM -->
-    <div id="menuContainer">
-        <div class="header">
-            <h1>MINECRAFT TRAINING</h1>
-            <div style="font-weight: bold;">Speler: <span style="color: #4caf50;">jooren</span></div>
-        </div>
-        <div class="content">
-            <div class="sidebar">
-                <p style="color: #4caf50; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">MODES SELECTEREN</p>
-                <button class="menu-btn" onclick="startWorld()">PVP Arena</button>
-                <button class="menu-btn" onclick="startWorld()">Parkour Mode</button>
-                <button class="menu-btn" style="border-color: #f44336; margin-top: 40px;" onclick="alert('Instellingen volgen in de volgende update!')">Settings</button>
-            </div>
-            <div class="main-area">
-                <h2 style="font-size: 50px; color: #fff; margin-bottom: 20px;">READY TO BATTLE?</h2>
-                <p style="color: #ccc; max-width: 500px; line-height: 1.6;">Kies links een mode om de 3D arena te betreden. Gebruik WASD om te lopen en Spatie om te springen.</p>
-            </div>
-        </div>
+    <div id="menu">
+        <h1>MINECRAFT ARENA</h1>
+        <button class="btn" onclick="start()">START GAME</button>
+        <p style="margin-top: 20px;">Klik om te beginnen</p>
     </div>
 
-    <!-- GAME SCHERM -->
-    <div id="gameContainer">
-        <div id="instructions">Klik op het scherm om de muis te locken!<br><small>(ESC om te stoppen)</small></div>
-        <div id="crosshair"></div>
-        <div id="hud">
-            <p id="coords">X: 0, Y: 1.6, Z: 0</p>
-            <p style="font-size: 12px; color: #4caf50;">SHIFT = CROUCH | SPACE = JUMP</p>
-        </div>
-        <canvas id="canvas"></canvas>
-    </div>
+    <div id="gui">WASD = Lopen | SPACE = Springen</div>
 
-    <!-- LIBRARIES (Gegarandeerd werkend op GitHub) -->
-    <script src="https://cdnjs.cloudflare.com"></script>
-    <script src="https://cdn.jsdelivr.net"></script>
+    <!-- We laden de scripts via UNPKG (meest betrouwbaar voor GitHub) -->
+    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com"></script>
 
     <script>
-        let scene, camera, renderer, controls;
-        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false, canJump = false;
-        let velocity = new THREE.Vector3();
-        let direction = new THREE.Vector3();
-        let prevTime = performance.now();
-
-        function startWorld() {
-            document.getElementById('menuContainer').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
-            init3D();
+        function start() {
+            document.getElementById('menu').style.display = 'none';
+            init();
         }
 
-        function init3D() {
-            // 1. Scene & Skybox
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x72a1ff); // Minecraft Blauw
-            scene.fog = new THREE.Fog(0x72a1ff, 0, 80);
-
-            // 2. Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        function init() {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x72a1ff);
             
-            // 3. Licht
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambientLight);
-            const sun = new THREE.DirectionalLight(0xffffff, 0.6);
-            sun.position.set(5, 10, 5);
-            scene.add(sun);
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-            // 4. ARENA BOUWEN (Drone Logica: 20x20 Steen vloer + Glas muren)
-            // Vloer
-            const floorGeo = new THREE.BoxGeometry(20, 1, 20);
-            const floorMat = new THREE.MeshLambertMaterial({ color: 0x808080 }); // Stone
-            const floor = new THREE.Mesh(floorGeo, floorMat);
+            // Licht
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+            // Arena (20x20 Steen vloer + Glas muren)
+            const floor = new THREE.Mesh(new THREE.BoxGeometry(20, 1, 20), new THREE.MeshLambertMaterial({color: 0x808080}));
             floor.position.y = -0.5;
             scene.add(floor);
 
-            // Glazen muren (5 hoog)
-            const wallH = 5;
-            const wallMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
-            
-            const wallN = new THREE.Mesh(new THREE.BoxGeometry(20, wallH, 0.5), wallMat);
-            wallN.position.set(0, wallH/2, -10);
-            scene.add(wallN);
+            const wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: 0.3});
+            const createWall = (x, z, ry) => {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(20, 5, 0.5), wallMat);
+                wall.position.set(x, 2.5, z);
+                wall.rotation.y = ry;
+                scene.add(wall);
+            };
+            createWall(0, -10, 0); createWall(0, 10, 0); 
+            createWall(-10, 0, Math.PI/2); createWall(10, 0, Math.PI/2);
 
-            const wallS = new THREE.Mesh(new THREE.BoxGeometry(20, wallH, 0.5), wallMat);
-            wallS.position.set(0, wallH/2, 10);
-            scene.add(wallS);
-
-            const wallE = new THREE.Mesh(new THREE.BoxGeometry(0.5, wallH, 20), wallMat);
-            wallE.position.set(10, wallH/2, 0);
-            scene.add(wallE);
-
-            const wallW = new THREE.Mesh(new THREE.BoxGeometry(0.5, wallH, 20), wallMat);
-            wallW.position.set(-10, wallH/2, 0);
-            scene.add(wallW);
-
-            // 5. Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            // 6. Controls (Minecraft stijl mouselook)
-            controls = new THREE.PointerLockControls(camera, document.body);
-            document.getElementById('gameContainer').addEventListener('click', () => controls.lock());
-
-            controls.addEventListener('lock', () => document.getElementById('instructions').style.display = 'none');
-            controls.addEventListener('unlock', () => document.getElementById('instructions').style.display = 'block');
-
+            // Controls
+            const controls = new THREE.PointerLockControls(camera, document.body);
+            document.body.addEventListener('click', () => controls.lock());
             scene.add(controls.getObject());
+            camera.position.y = 1.6;
 
-            // 7. Input
-            const onKeyDown = (e) => {
-                switch(e.code) {
-                    case 'KeyW': moveForward = true; break;
-                    case 'KeyA': moveLeft = true; break;
-                    case 'KeyS': moveBackward = true; break;
-                    case 'KeyD': moveRight = true; break;
-                    case 'Space': if(canJump) velocity.y += 12; canJump = false; break;
-                    case 'ShiftLeft': camera.position.y = 1.0; break;
-                }
-            };
-            const onKeyUp = (e) => {
-                switch(e.code) {
-                    case 'KeyW': moveForward = false; break;
-                    case 'KeyA': moveLeft = false; break;
-                    case 'KeyS': moveBackward = false; break;
-                    case 'KeyD': moveRight = false; break;
-                    case 'ShiftLeft': camera.position.y = 1.6; break;
-                }
-            };
-            document.addEventListener('keydown', onKeyDown);
-            document.addEventListener('keyup', onKeyUp);
+            // Beweging logica
+            let moveF = false, moveB = false, moveL = false, moveR = false;
+            document.addEventListener('keydown', (e) => {
+                if(e.code === 'KeyW') moveF = true;
+                if(e.code === 'KeyS') moveB = true;
+                if(e.code === 'KeyA') moveL = true;
+                if(e.code === 'KeyD') moveR = true;
+                if(e.code === 'Space' && camera.position.y <= 1.6) velocityY = 0.15;
+            });
+            document.addEventListener('keyup', (e) => {
+                if(e.code === 'KeyW') moveF = false;
+                if(e.code === 'KeyS') moveB = false;
+                if(e.code === 'KeyA') moveL = false;
+                if(e.code === 'KeyD') moveR = false;
+            });
 
+            let velocityY = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                if (controls.isLocked) {
+                    if(moveF) controls.moveForward(0.1);
+                    if(moveB) controls.moveForward(-0.1);
+                    if(moveL) controls.moveRight(-0.1);
+                    if(moveR) controls.moveRight(0.1);
+                    
+                    // Simpele zwaartekracht
+                    camera.position.y += velocityY;
+                    if(camera.position.y > 1.6) velocityY -= 0.01;
+                    else { camera.position.y = 1.6; velocityY = 0; }
+                }
+                renderer.render(scene, camera);
+            }
             animate();
         }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            if (controls.isLocked) {
-                const time = performance.now();
-                const delta = (time - prevTime) / 1000;
-
-                velocity.x -= velocity.x * 10.0 * delta;
-                velocity.z -= velocity.z * 10.0 * delta;
-                velocity.y -= 30.0 * delta; // Zwaartekracht
-
-                direction.z = Number(moveForward) - Number(moveBackward);
-                direction.x = Number(moveRight) - Number(moveLeft);
-                direction.normalize();
-
-                if (moveForward || moveBackward) velocity.z -= direction.z * 160.0 * delta;
-                if (moveLeft || moveRight) velocity.x -= direction.x * 160.0 * delta;
-
-                controls.moveRight(-velocity.x * delta);
-                controls.moveForward(-velocity.z * delta);
-                controls.getObject().position.y += (velocity.y * delta);
-
-                // Grond-check (stay inside arena)
-                if (controls.getObject().position.y < 1.6) {
-                    velocity.y = 0;
-                    controls.getObject().position.y = 1.6;
-                    canJump = true;
-                }
-
-                // HUD Stats update
-                const pos = camera.position;
-                document.getElementById('coords').innerText = `X: ${pos.x.toFixed(1)}, Y: ${pos.y.toFixed(1)}, Z: ${pos.z.toFixed(1)}`;
-
-                prevTime = time;
-            }
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            if(camera) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-        });
     </script>
 </body>
 </html>
