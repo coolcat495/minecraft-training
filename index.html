@@ -7,50 +7,59 @@
         body { margin: 0; overflow: hidden; background-color: #87CEEB; font-family: 'Courier New', monospace; color: white; }
         #overlay { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.8); z-index: 1000; cursor: pointer; }
         #gui { position: absolute; bottom: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); padding: 15px; border: 2px solid #4caf50; }
-        
-        /* FIRST PERSON HAND & SWORD */
-        #hand-container { position: absolute; bottom: 0; right: 10%; width: 300px; height: 300px; pointer-events: none; z-index: 50; transition: transform 0.1s; }
-        #hand { position: absolute; bottom: -50px; right: 0; width: 100px; height: 200px; background: #ffdbac; border: 4px solid #ccac8a; transform: rotate(-10deg); }
-        #sword-img { position: absolute; bottom: 50px; right: 30px; width: 150px; height: 150px; transform: rotate(-20deg); }
-        .swing { transform: rotate(-45deg) translateY(-80px) translateX(-50px) !important; }
+        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 30px; z-index: 5; pointer-events: none; }
 
-        /* ENGINE STYLES */
+        /* HET ZWAARD (Gemaakt van CSS blokken) */
+        #hand-container { position: absolute; bottom: 0; right: 15%; width: 200px; height: 200px; pointer-events: none; z-index: 50; transition: transform 0.1s; transform-origin: bottom right; }
+        #sword-blade { position: absolute; bottom: 100px; right: 80px; width: 30px; height: 180px; background: #00ffff; border: 4px solid #008b8b; transform: rotate(45deg); }
+        #sword-handle { position: absolute; bottom: 40px; right: 40px; width: 20px; height: 60px; background: #8b4513; border: 2px solid #000; transform: rotate(45deg); }
+        .swing { transform: rotate(-45deg) translateY(-50px) !important; }
+
+        /* ARENA & WERELD */
         #viewport { width: 100vw; height: 100vh; perspective: 800px; display: flex; justify-content: center; align-items: center; }
         #world { width: 0; height: 0; transform-style: preserve-3d; }
         .face { position: absolute; transform-style: preserve-3d; backface-visibility: hidden; }
         
-        /* TEXTURES */
-        .floor { width: 2000px; height: 2000px; background: #5d9943; background-image: url('https://minecraft.wiki'); background-size: 50px; transform: rotateX(90deg) translate3d(-1000px, -1000px, 0); }
-        .wall { width: 2000px; height: 600px; background: rgba(173, 216, 230, 0.3); border: 5px solid white; box-sizing: border-box; }
-        .block { width: 50px; height: 50px; background: #7a7a7a; border: 1px solid #000; position: absolute; }
+        /* GRAS MAT (20x20m arena) */
+        .floor { 
+            width: 2000px; height: 2000px; background: #5d9943; 
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 99px, #4d8236 100px), 
+                              repeating-linear-gradient(90deg, transparent, transparent 99px, #4d8236 100px);
+            transform: rotateX(90deg) translate3d(-1000px, -1000px, 0); 
+        }
+        .wall { width: 2000px; height: 600px; background: rgba(255, 255, 255, 0.2); border: 10px solid #fff; box-sizing: border-box; }
+        
+        /* GEBOUWDE BLOKKEN */
+        .block { width: 100px; height: 100px; background: #7a7a7a; border: 2px solid #333; position: absolute; transform-style: preserve-3d; }
     </style>
 </head>
 <body onmousedown="handleAction(event)">
 
     <div id="overlay" onclick="startEngine()">
-        <h1 style="color: #4caf50; font-size: 50px;">BATTLE & BUILD</h1>
-        <button style="padding: 20px 40px; font-size: 24px; background: #4caf50; color: white; border: none; cursor: pointer;">START TRAINING</button>
-        <div style="margin-top: 20px; text-align: center; line-height: 1.6;">
-            WASD = Lopen | Spatie = Springen<br>
-            <b>B = Build Mode (Vliegen aan/uit)</b><br>
-            Linksklik = Slaan | Rechtsklik = Bouwen
+        <h1 style="color: #4caf50; font-size: 50px; text-shadow: 3px 3px #000;">BATTLE & BUILD</h1>
+        <button style="padding: 20px 40px; font-size: 24px; background: #4caf50; color: white; border: 4px solid #1e3b0e; cursor: pointer;">START TRAINING</button>
+        <div style="margin-top: 20px; line-height: 1.5;">
+            <b>WASD</b> = Lopen | <b>Spatie</b> = Springen<br>
+            <b>B</b> = Build Mode (Vliegen) | <b>4</b> = Camera<br>
+            <b>Linksklik</b> = Slaan | <b>Rechtsklik</b> = Bouwen
         </div>
     </div>
 
+    <div id="crosshair">+</div>
+
     <div id="hand-container">
-        <img id="sword-img" src="https://minecraft.wiki" alt="Sword">
-        <div id="hand"></div>
+        <div id="sword-blade"></div>
+        <div id="sword-handle"></div>
     </div>
 
     <div id="gui">
-        MODE: <span id="mode-text">PVP (Walking)</span> | CAM: <span id="cam-text">1st</span><br>
-        COORD: <span id="pos-text">0, 0, 0</span>
+        MODE: <span id="mode-text">PVP</span> | POS: <span id="pos-text">0,0,0</span>
     </div>
 
     <div id="viewport">
         <div id="world">
             <div class="face floor"></div>
-            <!-- Arena Muren -->
+            <!-- De 4 muren van de arena -->
             <div class="face wall" style="transform: translate3d(-1000px, -600px, 1000px);"></div>
             <div class="face wall" style="transform: translate3d(-1000px, -600px, -1000px);"></div>
             <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -600px, 1000px);"></div>
@@ -72,11 +81,11 @@
         }
 
         function handleAction(e) {
-            if (e.button === 0) { // Linksklik: Slaan
+            if (e.button === 0) { // Slaan
                 const h = document.getElementById('hand-container');
                 h.classList.add('swing');
                 setTimeout(() => h.classList.remove('swing'), 100);
-            } else if (e.button === 2 && isBuildMode) { // Rechtsklik: Bouwen
+            } else if (e.button === 2 && isBuildMode) { // Bouwen
                 placeBlock();
             }
         }
@@ -87,12 +96,11 @@
             keys[e.code] = true;
             if (e.code === 'KeyB') {
                 isBuildMode = !isBuildMode;
-                document.getElementById('mode-text').innerText = isBuildMode ? "BUILD (Flying)" : "PVP (Walking)";
+                document.getElementById('mode-text').innerText = isBuildMode ? "BUILD (Vliegen)" : "PVP";
                 velY = 0;
             }
             if (e.key === '4') {
                 viewMode = (viewMode + 1) % 2;
-                document.getElementById('cam-text').innerText = viewMode === 0 ? "1st" : "3rd";
                 document.getElementById('hand-container').style.display = viewMode === 0 ? "block" : "none";
             }
         });
@@ -102,20 +110,22 @@
             if (document.pointerLockElement === document.body) {
                 rotY -= e.movementX * 0.2;
                 rotX -= e.movementY * 0.2;
-                rotX = Math.max(-80, Math.min(80, rotX));
+                rotX = Math.max(-70, Math.min(70, rotX));
             }
         });
 
         function placeBlock() {
             const b = document.createElement('div');
             b.className = 'block';
-            // Simpele plaatsing op huidige positie voor test
-            b.style.transform = `translate3d(${-posX}px, ${-posY - 50}px, ${-posZ}px)`;
+            // Plaatst blok op afgeronde coordinaten (grid-snapping)
+            let bx = Math.round(-posX / 100) * 100 - 50;
+            let bz = Math.round(-posZ / 100) * 100 - 50;
+            b.style.transform = `translate3d(${bx}px, ${-posY - 50}px, ${bz}px)`;
             document.getElementById('placed-blocks').appendChild(b);
         }
 
         function animate() {
-            const speed = isBuildMode ? 12 : 7;
+            const speed = isBuildMode ? 15 : 8;
             const rad = rotY * Math.PI / 180;
 
             if (keys['KeyW']) { posX -= Math.sin(rad) * speed; posZ += Math.cos(rad) * speed; }
@@ -124,16 +134,16 @@
             if (keys['KeyD']) { posX += Math.cos(rad) * speed; posZ += Math.sin(rad) * speed; }
 
             if (isBuildMode) {
-                if (keys['Space']) posY += speed; // Vliegen omhoog
-                if (keys['ShiftLeft']) posY -= speed; // Vliegen omlaag
+                if (keys['Space']) posY += speed;
+                if (keys['ShiftLeft']) posY -= speed;
             } else {
-                if (keys['Space'] && posY <= 0) velY = 12; // Springen
+                if (keys['Space'] && posY <= 0) velY = 14;
                 posY += velY;
-                if (posY > 0) velY -= 0.8; else { posY = 0; velY = 0; }
+                if (posY > 0) velY -= 0.9; else { posY = 0; velY = 0; }
             }
 
             let camY = 150 + posY;
-            let camZ = viewMode === 1 ? -400 : 0;
+            let camZ = viewMode === 1 ? -500 : 0;
 
             const world = document.getElementById('world');
             world.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${posX}px, ${camY}px, ${posZ}px) translateZ(${camZ}px)`;
