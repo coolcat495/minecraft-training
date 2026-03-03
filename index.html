@@ -1,102 +1,62 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Minecraft Training Arena</title>
+    <title>3D Arena Test</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; font-family: sans-serif; }
-        #menu { position: absolute; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #1a1a1a; color: white; }
-        .btn { padding: 15px 30px; background: #4caf50; border: none; color: white; font-size: 20px; cursor: pointer; border-radius: 5px; }
-        #gui { position: absolute; bottom: 10px; left: 10px; color: white; pointer-events: none; }
+        /* De 'Engine' zonder externe scripts */
+        body { margin: 0; background: #87CEEB; overflow: hidden; perspective: 800px; font-family: sans-serif; }
+        
+        #world { 
+            width: 100vw; height: 100vh; 
+            transform-style: preserve-3d; 
+            transform: rotateX(-20deg) rotateY(45deg) translateZ(-500px);
+            transition: transform 0.1s;
+        }
+
+        /* De Arena Vloer */
+        .floor { 
+            position: absolute; width: 600px; height: 600px; 
+            background: #4a9142; border: 5px solid #2d5016;
+            transform: rotateX(90deg) translateZ(-300px) translateX(-300px);
+        }
+
+        /* Glazen Muren */
+        .wall { 
+            position: absolute; width: 600px; height: 200px; 
+            background: rgba(255, 255, 255, 0.3); border: 2px solid white;
+        }
+        .n { transform: translateZ(300px) translateY(-300px) translateX(-300px); }
+        .s { transform: translateZ(-300px) translateY(-300px) translateX(-300px); }
+        .e { transform: rotateY(90deg) translateZ(300px) translateY(-300px) translateX(-300px); }
+        .w { transform: rotateY(90deg) translateZ(-300px) translateY(-300px) translateX(-300px); }
+
+        #ui { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 10px; z-index: 100; }
     </style>
 </head>
 <body>
 
-    <div id="menu">
-        <h1>MINECRAFT ARENA</h1>
-        <button class="btn" onclick="start()">START GAME</button>
-        <p style="margin-top: 20px;">Klik om te beginnen</p>
+    <div id="ui">
+        <h1>BATTLE ARENA TEST</h1>
+        <p>Als je dit ziet, werkt je GitHub Page!</p>
+        <p>Gebruik de pijltjestoetsen om de arena te draaien.</p>
     </div>
 
-    <div id="gui">WASD = Lopen | SPACE = Springen</div>
-
-    <!-- We laden de scripts via UNPKG (meest betrouwbaar voor GitHub) -->
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
+    <div id="world">
+        <div class="floor"></div>
+        <div class="wall n"></div>
+        <div class="wall s"></div>
+        <div class="wall e"></div>
+        <div class="wall w"></div>
+    </div>
 
     <script>
-        function start() {
-            document.getElementById('menu').style.display = 'none';
-            init();
-        }
-
-        function init() {
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x72a1ff);
-            
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            // Licht
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-
-            // Arena (20x20 Steen vloer + Glas muren)
-            const floor = new THREE.Mesh(new THREE.BoxGeometry(20, 1, 20), new THREE.MeshLambertMaterial({color: 0x808080}));
-            floor.position.y = -0.5;
-            scene.add(floor);
-
-            const wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: 0.3});
-            const createWall = (x, z, ry) => {
-                const wall = new THREE.Mesh(new THREE.BoxGeometry(20, 5, 0.5), wallMat);
-                wall.position.set(x, 2.5, z);
-                wall.rotation.y = ry;
-                scene.add(wall);
-            };
-            createWall(0, -10, 0); createWall(0, 10, 0); 
-            createWall(-10, 0, Math.PI/2); createWall(10, 0, Math.PI/2);
-
-            // Controls
-            const controls = new THREE.PointerLockControls(camera, document.body);
-            document.body.addEventListener('click', () => controls.lock());
-            scene.add(controls.getObject());
-            camera.position.y = 1.6;
-
-            // Beweging logica
-            let moveF = false, moveB = false, moveL = false, moveR = false;
-            document.addEventListener('keydown', (e) => {
-                if(e.code === 'KeyW') moveF = true;
-                if(e.code === 'KeyS') moveB = true;
-                if(e.code === 'KeyA') moveL = true;
-                if(e.code === 'KeyD') moveR = true;
-                if(e.code === 'Space' && camera.position.y <= 1.6) velocityY = 0.15;
-            });
-            document.addEventListener('keyup', (e) => {
-                if(e.code === 'KeyW') moveF = false;
-                if(e.code === 'KeyS') moveB = false;
-                if(e.code === 'KeyA') moveL = false;
-                if(e.code === 'KeyD') moveR = false;
-            });
-
-            let velocityY = 0;
-            function animate() {
-                requestAnimationFrame(animate);
-                if (controls.isLocked) {
-                    if(moveF) controls.moveForward(0.1);
-                    if(moveB) controls.moveForward(-0.1);
-                    if(moveL) controls.moveRight(-0.1);
-                    if(moveR) controls.moveRight(0.1);
-                    
-                    // Simpele zwaartekracht
-                    camera.position.y += velocityY;
-                    if(camera.position.y > 1.6) velocityY -= 0.01;
-                    else { camera.position.y = 1.6; velocityY = 0; }
-                }
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
+        // Simpele rotatie om te testen of JS werkt
+        let rotY = 45;
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "ArrowLeft") rotY -= 5;
+            if(e.key === "ArrowRight") rotY += 5;
+            document.getElementById('world').style.transform = `rotateX(-20deg) rotateY(${rotY}deg) translateZ(-500px)`;
+        });
     </script>
 </body>
 </html>
