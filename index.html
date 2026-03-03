@@ -2,117 +2,98 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Minecraft Training Center - Official</title>
+    <title>Minecraft Arena - Build & Battle</title>
     <style>
-        /* BASIS & MENU STYLES */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a1a; color: #fff; overflow: hidden; }
+        body { margin: 0; overflow: hidden; background-color: #87CEEB; font-family: 'Courier New', monospace; color: white; }
+        #overlay { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.8); z-index: 1000; cursor: pointer; }
+        #gui { position: absolute; bottom: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); padding: 15px; border: 2px solid #4caf50; }
         
-        #menuContainer { 
-            width: 100%; height: 100vh; display: flex; flex-direction: column; 
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d5016 100%); 
-            position: absolute; z-index: 1000; 
-        }
-        .header { background: rgba(0, 0, 0, 0.85); padding: 20px; border-bottom: 4px solid #4caf50; display: flex; justify-content: space-between; }
-        .sidebar { width: 250px; background: rgba(0, 0, 0, 0.9); border-right: 3px solid #2d5016; padding: 20px; height: 100%; }
-        .menu-btn { 
-            width: 100%; padding: 15px; margin-bottom: 10px; background: #333; 
-            border: 2px solid #4caf50; color: #fff; cursor: pointer; font-weight: bold; 
-        }
-        .menu-btn:hover { background: #4caf50; color: #000; }
+        /* FIRST PERSON HAND & SWORD */
+        #hand-container { position: absolute; bottom: 0; right: 10%; width: 300px; height: 300px; pointer-events: none; z-index: 50; transition: transform 0.1s; }
+        #hand { position: absolute; bottom: -50px; right: 0; width: 100px; height: 200px; background: #ffdbac; border: 4px solid #ccac8a; transform: rotate(-10deg); }
+        #sword-img { position: absolute; bottom: 50px; right: 30px; width: 150px; height: 150px; transform: rotate(-20deg); }
+        .swing { transform: rotate(-45deg) translateY(-80px) translateX(-50px) !important; }
 
-        /* HUD & GAME UI */
-        #gameContainer { display: none; width: 100%; height: 100vh; position: relative; }
-        #crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 30px; z-index: 10; pointer-events: none; }
-        #hud { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.7); padding: 15px; border: 2px solid #4caf50; z-index: 10; }
-        
-        /* DIAMOND SWORD */
-        #sword { 
-            position: absolute; bottom: -10px; right: 15%; width: 200px; height: 200px;
-            background: url('https://minecraft.wiki') no-repeat center;
-            background-size: contain; z-index: 20; pointer-events: none; transition: 0.1s; transform: rotate(-10deg);
-        }
-        .swing { transform: rotate(-60deg) translateY(-40px) !important; }
-
-        /* 3D ENGINE (CSS based voor GitHub stabiliteit) */
-        #viewport { width: 100vw; height: 100vh; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
+        /* ENGINE STYLES */
+        #viewport { width: 100vw; height: 100vh; perspective: 800px; display: flex; justify-content: center; align-items: center; }
         #world { width: 0; height: 0; transform-style: preserve-3d; }
-        .face { position: absolute; transform-style: preserve-3d; }
-        .floor { 
-            width: 2000px; height: 2000px; background: #2d5016; 
-            background-image: repeating-linear-gradient(0deg, transparent, transparent 49px, #1e3b0e 50px), 
-                              repeating-linear-gradient(90deg, transparent, transparent 49px, #1e3b0e 50px);
-            transform: rotateX(90deg) translate3d(-1000px, -1000px, 0); 
-        }
-        .wall { width: 2000px; height: 400px; background: rgba(173, 216, 230, 0.2); border: 4px solid #fff; }
+        .face { position: absolute; transform-style: preserve-3d; backface-visibility: hidden; }
+        
+        /* TEXTURES */
+        .floor { width: 2000px; height: 2000px; background: #5d9943; background-image: url('https://minecraft.wiki'); background-size: 50px; transform: rotateX(90deg) translate3d(-1000px, -1000px, 0); }
+        .wall { width: 2000px; height: 600px; background: rgba(173, 216, 230, 0.3); border: 5px solid white; box-sizing: border-box; }
+        .block { width: 50px; height: 50px; background: #7a7a7a; border: 1px solid #000; position: absolute; }
     </style>
 </head>
-<body onmousedown="handleSwing()">
+<body onmousedown="handleAction(event)">
 
-    <!-- HET MENU -->
-    <div id="menuContainer">
-        <div class="header"><h1>MINECRAFT TRAINING CENTER</h1><div>Speler: jooren</div></div>
-        <div style="display: flex; flex: 1;">
-            <div class="sidebar">
-                <button class="menu-btn" onclick="startWorld()">PVP ARENA</button>
-                <button class="menu-btn" onclick="startWorld()">BUILD MODE</button>
-            </div>
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 style="font-size: 40px; color: #4caf50;">KLAAR VOOR DE START?</h2>
-                <p>Klik op PVP ARENA om de wereld te laden.</p>
-            </div>
+    <div id="overlay" onclick="startEngine()">
+        <h1 style="color: #4caf50; font-size: 50px;">BATTLE & BUILD</h1>
+        <button style="padding: 20px 40px; font-size: 24px; background: #4caf50; color: white; border: none; cursor: pointer;">START TRAINING</button>
+        <div style="margin-top: 20px; text-align: center; line-height: 1.6;">
+            WASD = Lopen | Spatie = Springen<br>
+            <b>B = Build Mode (Vliegen aan/uit)</b><br>
+            Linksklik = Slaan | Rechtsklik = Bouwen
         </div>
     </div>
 
-    <!-- HET SPEL -->
-    <div id="gameContainer">
-        <div id="crosshair">+</div>
-        <div id="sword"></div>
-        <div id="hud">
-            COORD: <span id="pos-val">0, 0</span> | MODE: <span id="cam-val">1st Person</span><br>
-            <small>WASD=Lopen | Spatie=Springen | F4=Camera | Klik=Slaan</small>
-        </div>
-        <div id="viewport">
-            <div id="world">
-                <div class="face floor"></div>
-                <!-- Arena muren -->
-                <div class="face wall" style="transform: translate3d(-1000px, -400px, 1000px);"></div>
-                <div class="face wall" style="transform: translate3d(-1000px, -400px, -1000px);"></div>
-                <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -400px, 1000px);"></div>
-                <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -400px, -1000px);"></div>
-            </div>
+    <div id="hand-container">
+        <img id="sword-img" src="https://minecraft.wiki" alt="Sword">
+        <div id="hand"></div>
+    </div>
+
+    <div id="gui">
+        MODE: <span id="mode-text">PVP (Walking)</span> | CAM: <span id="cam-text">1st</span><br>
+        COORD: <span id="pos-text">0, 0, 0</span>
+    </div>
+
+    <div id="viewport">
+        <div id="world">
+            <div class="face floor"></div>
+            <!-- Arena Muren -->
+            <div class="face wall" style="transform: translate3d(-1000px, -600px, 1000px);"></div>
+            <div class="face wall" style="transform: translate3d(-1000px, -600px, -1000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -600px, 1000px);"></div>
+            <div class="face wall" style="transform: rotateY(90deg) translate3d(-1000px, -600px, -1000px);"></div>
+            <div id="placed-blocks"></div>
         </div>
     </div>
 
     <script>
         let posX = 0, posZ = 0, posY = 0, rotY = 0, rotX = 0, velY = 0;
         let keys = {};
-        let viewMode = 0; // 0=1st, 1=3rd, 2=2nd
-        let isPlaying = false;
+        let isBuildMode = false;
+        let viewMode = 0;
 
-        function startWorld() {
-            document.getElementById('menuContainer').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
+        function startEngine() {
+            document.getElementById('overlay').style.display = 'none';
             document.body.requestPointerLock();
-            isPlaying = true;
             animate();
         }
 
-        function handleSwing() {
-            if(!isPlaying) return;
-            const s = document.getElementById('sword');
-            s.classList.add('swing');
-            setTimeout(() => s.classList.remove('swing'), 100);
+        function handleAction(e) {
+            if (e.button === 0) { // Linksklik: Slaan
+                const h = document.getElementById('hand-container');
+                h.classList.add('swing');
+                setTimeout(() => h.classList.remove('swing'), 100);
+            } else if (e.button === 2 && isBuildMode) { // Rechtsklik: Bouwen
+                placeBlock();
+            }
         }
+
+        window.addEventListener('contextmenu', e => e.preventDefault());
 
         window.addEventListener('keydown', e => {
             keys[e.code] = true;
-            if (e.code === 'F4' || e.key === '4') {
-                e.preventDefault();
-                viewMode = (viewMode + 1) % 3;
-                const modes = ["1st Person", "3rd Person Back", "2nd Person Front"];
-                document.getElementById('cam-val').innerText = modes[viewMode];
-                document.getElementById('sword').style.display = (viewMode === 0) ? "block" : "none";
+            if (e.code === 'KeyB') {
+                isBuildMode = !isBuildMode;
+                document.getElementById('mode-text').innerText = isBuildMode ? "BUILD (Flying)" : "PVP (Walking)";
+                velY = 0;
+            }
+            if (e.key === '4') {
+                viewMode = (viewMode + 1) % 2;
+                document.getElementById('cam-text').innerText = viewMode === 0 ? "1st" : "3rd";
+                document.getElementById('hand-container').style.display = viewMode === 0 ? "block" : "none";
             }
         });
         window.addEventListener('keyup', e => keys[e.code] = false);
@@ -121,35 +102,43 @@
             if (document.pointerLockElement === document.body) {
                 rotY -= e.movementX * 0.2;
                 rotX -= e.movementY * 0.2;
-                if(rotX > 70) rotX = 70; if(rotX < -70) rotX = -70;
+                rotX = Math.max(-80, Math.min(80, rotX));
             }
         });
 
+        function placeBlock() {
+            const b = document.createElement('div');
+            b.className = 'block';
+            // Simpele plaatsing op huidige positie voor test
+            b.style.transform = `translate3d(${-posX}px, ${-posY - 50}px, ${-posZ}px)`;
+            document.getElementById('placed-blocks').appendChild(b);
+        }
+
         function animate() {
-            if(!isPlaying) return;
-            const speed = 8;
+            const speed = isBuildMode ? 12 : 7;
             const rad = rotY * Math.PI / 180;
 
-            // WASD BEWEGING (Strafing)
             if (keys['KeyW']) { posX -= Math.sin(rad) * speed; posZ += Math.cos(rad) * speed; }
             if (keys['KeyS']) { posX += Math.sin(rad) * speed; posZ -= Math.cos(rad) * speed; }
             if (keys['KeyA']) { posX -= Math.cos(rad) * speed; posZ -= Math.sin(rad) * speed; }
             if (keys['KeyD']) { posX += Math.cos(rad) * speed; posZ += Math.sin(rad) * speed; }
 
-            // SPRINGEN
-            if (keys['Space'] && posY <= 0) velY = 13;
-            posY += velY;
-            if (posY > 0) velY -= 0.8; else { posY = 0; velY = 0; }
+            if (isBuildMode) {
+                if (keys['Space']) posY += speed; // Vliegen omhoog
+                if (keys['ShiftLeft']) posY -= speed; // Vliegen omlaag
+            } else {
+                if (keys['Space'] && posY <= 0) velY = 12; // Springen
+                posY += velY;
+                if (posY > 0) velY -= 0.8; else { posY = 0; velY = 0; }
+            }
 
-            // CAMERA SETTINGS
-            let camZ = 0, camY = 200 + posY, camRotY = rotY;
-            if (viewMode === 1) camZ = -450; // Achterkant
-            if (viewMode === 2) { camZ = 450; camRotY = rotY + 180; } // Voorkant
+            let camY = 150 + posY;
+            let camZ = viewMode === 1 ? -400 : 0;
 
             const world = document.getElementById('world');
-            world.style.transform = `rotateX(${rotX}deg) rotateY(${camRotY}deg) translate3d(${posX}px, ${camY}px, ${posZ}px) translateZ(${camZ}px)`;
+            world.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${posX}px, ${camY}px, ${posZ}px) translateZ(${camZ}px)`;
 
-            document.getElementById('pos-val').innerText = `${Math.round(posX/10)}, ${Math.round(posZ/10)}`;
+            document.getElementById('pos-text').innerText = `${Math.round(posX/10)}, ${Math.round(posY/10)}, ${Math.round(posZ/10)}`;
             requestAnimationFrame(animate);
         }
     </script>
